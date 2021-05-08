@@ -2,10 +2,10 @@ package Sklep;
 
 public abstract class User {
 
-    private int userID;
-    String password;
-    String userEmail;
-    int userType;
+    protected int userID;
+    protected String password;
+    protected String userEmail;
+    protected int userType;
 
     abstract public boolean signIn(String userEmail, String password);
 }

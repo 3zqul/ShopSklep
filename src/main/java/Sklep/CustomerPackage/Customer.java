@@ -12,6 +12,8 @@ public class Customer extends User {
     protected Offer userOffer;
     protected Order userOrder;
 
+    public Customer() {}
+
     public Customer(String userShoeSize, String userName, Payout userPayout, Payment userPayment, Address userAddress, Offer userOffer, Order userOrder){
         this.userAddress=userAddress;
         this.userName=userName;
@@ -41,6 +43,7 @@ public class Customer extends User {
 
     @Override
     public boolean signIn(String userEmail, String password) {
+
         return true;
     }
 }

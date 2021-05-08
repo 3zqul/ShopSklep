@@ -4,8 +4,6 @@ import Sklep.User;
 
 public class Editor extends User {
 
-
-
     public Editor(){
 
     }
