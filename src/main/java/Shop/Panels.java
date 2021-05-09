@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -21,7 +21,7 @@ public class Panels extends JPanel implements ActionListener{
 	private JButton logInButton;
 	private JButton createAccountButton;
 	private JLabel logoLabel;
-	ImageIcon logo = new ImageIcon("D:\\Shop\\src\\main\\java\\Shop\\logoEssa.png");
+	ImageIcon logo = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
 
 	public Panels(){
 		loginPanel();
@@ -66,15 +66,21 @@ public class Panels extends JPanel implements ActionListener{
 			}
 		};
 		logInButton.addActionListener(actionListener);
+		logInButton.setBackground(Color.WHITE);
+		logInButton.setOpaque(true);
+		logInButton.setBorder(null);
 		add(logInButton);
 
 		createAccountButton = new JButton("Create Account");
 		createAccountButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		createAccountButton.setBounds(359, 411, 212, 45);
+		createAccountButton.setBackground(Color.WHITE);
+		createAccountButton.setOpaque(true);
+		createAccountButton.setBorder(null);
 		add(createAccountButton);
 
 		logoLabel = new JLabel();
-		logoLabel.setBounds(520, 90, 100, 100);
+		logoLabel.setBounds(460, 20, 250, 250);
 		logoLabel.setIcon(logo);
 		add(logoLabel);
 	}
