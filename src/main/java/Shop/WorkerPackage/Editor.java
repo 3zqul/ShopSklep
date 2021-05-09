@@ -1,6 +1,6 @@
-package Sklep.WorkerPackage;
+package Shop.WorkerPackage;
 
-import Sklep.User;
+import Shop.User;
 
 public class Editor extends User {
 

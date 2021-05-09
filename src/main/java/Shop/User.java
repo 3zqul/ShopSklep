@@ -1,4 +1,4 @@
-package Sklep;
+package Shop;
 
 public abstract class User {
 

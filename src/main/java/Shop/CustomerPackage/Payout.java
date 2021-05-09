@@ -1,4 +1,4 @@
-package Sklep.CustomerPackage;
+package Shop.CustomerPackage;
 
 public class Payout {
 

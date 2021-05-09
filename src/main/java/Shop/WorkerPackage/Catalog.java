@@ -1,4 +1,4 @@
-package Sklep.WorkerPackage;
+package Shop.WorkerPackage;
 
 import java.util.ArrayList;
 
