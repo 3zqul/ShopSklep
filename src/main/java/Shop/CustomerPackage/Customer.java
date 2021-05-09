@@ -58,7 +58,7 @@ public class Customer extends User implements FileRead {
 
         try{
             Workbook workbook;
-            try (FileInputStream file = new FileInputStream(new File("D:\\Shop\\src\\main\\java\\Shop\\essa.xlsx"))) {
+            try (FileInputStream file = new FileInputStream(new File("C:\\Users\\bigos\\IdeaProjects\\ShopSklep\\src\\main\\java\\Shop\\essa.xlsx"))) {
                 workbook = new XSSFWorkbook(file);
             }
             Sheet sheet = workbook.getSheet(sheetName);
