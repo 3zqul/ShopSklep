@@ -5,7 +5,7 @@ import javax.swing.*;
 public class Window {
 
 	public JFrame frame;
-	ImageIcon logo = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\shoe10.png");
+	ImageIcon logo = new ImageIcon("C:\\Users\\bigos\\IdeaProjects\\ShopSklep\\src\\main\\java\\Pictures\\shoe10");
 
 	public Window() {
 		initialize();

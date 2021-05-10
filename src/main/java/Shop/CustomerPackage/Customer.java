@@ -104,7 +104,6 @@ public class Customer extends User implements FileRead {
     public boolean signIn(String userEmail, String password) {
 
         Boolean check = readUserID("User", password, userEmail);
-
         return check;
     }
 }

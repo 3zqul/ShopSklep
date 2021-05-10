@@ -21,7 +21,7 @@ public class Panels extends JPanel implements ActionListener{
 	private JButton logInButton;
 	private JButton createAccountButton;
 	private JLabel logoLabel;
-	ImageIcon logo = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
+	ImageIcon logo = new ImageIcon("C:\\Users\\bigos\\IdeaProjects\\ShopSklep\\src\\main\\java\\Images\\logo250");
 
 	public Panels(){
 		loginPanel();
@@ -80,7 +80,7 @@ public class Panels extends JPanel implements ActionListener{
 		add(createAccountButton);
 
 		logoLabel = new JLabel();
-		logoLabel.setBounds(460, 20, 250, 250);
+		logoLabel.setBounds(520, 90, 250, 250);
 		logoLabel.setIcon(logo);
 		add(logoLabel);
 	}
