@@ -21,7 +21,10 @@ public class Panels extends JPanel implements ActionListener{
 	private JButton logInButton;
 	private JButton createAccountButton;
 	private JLabel logoLabel;
-	ImageIcon logo = new ImageIcon("C:\\Users\\bigos\\IdeaProjects\\ShopSklep\\src\\main\\java\\Images\\logo250");
+	private JButton catalogButton;
+	private JButton accountButton;
+	ImageIcon logo250 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
+	ImageIcon logo100 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
 
 	public Panels(){
 		loginPanel();
@@ -31,35 +34,39 @@ public class Panels extends JPanel implements ActionListener{
 		setLayout(null);
 
 		passwordField = new JPasswordField();
-		passwordField.setBounds(359, 361, 448, 45);
+		passwordField.setBounds(359, 366, 448, 45);
 		add(passwordField);
 
 		emailField = new JTextField();
-		emailField.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		emailField.setFont(new Font("Air Americana", Font.PLAIN, 20));
 		emailField.setToolTipText("");
 		emailField.setBounds(359, 285, 448, 45);
 		add(emailField);
 		emailField.setColumns(10);
 
 		emailLabel = new JLabel("Email adress");
-		emailLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		emailLabel.setFont(new Font("Air Americana", Font.PLAIN, 25));
 		emailLabel.setBounds(359, 254, 448, 32);
 		add(emailLabel);
 
 		passwordLabel = new JLabel("Password");
-		passwordLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		passwordLabel.setBounds(359, 329, 448, 32);
+		passwordLabel.setFont(new Font("Air Americana", Font.PLAIN, 25));
+		passwordLabel.setBounds(359, 336, 448, 32);
 		add(passwordLabel);
 
 		logInButton = new JButton("Sign In");
-		logInButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		logInButton.setBounds(595, 411, 212, 45);
+		logInButton.setFont(new Font("Air Americana", Font.PLAIN, 25));
+		logInButton.setBounds(595, 418, 212, 45);
 		ActionListener actionListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Customer customer = new Customer();
 				if(customer.readUserID("User", passwordField.getText(), emailField.getText())){
 					System.out.println("elo");
+					removeAll();
+					catalogPanel();
+					repaint();
+					revalidate();
 				}else{
 					System.out.println("dupa");
 				}
@@ -72,20 +79,47 @@ public class Panels extends JPanel implements ActionListener{
 		add(logInButton);
 
 		createAccountButton = new JButton("Create Account");
-		createAccountButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		createAccountButton.setBounds(359, 411, 212, 45);
+		createAccountButton.setFont(new Font("Air Americana", Font.PLAIN, 25));
+		createAccountButton.setBounds(359, 418, 212, 45);
 		createAccountButton.setBackground(Color.WHITE);
 		createAccountButton.setOpaque(true);
 		createAccountButton.setBorder(null);
+		createAccountButton.setVerticalAlignment(JButton.CENTER);
 		add(createAccountButton);
 
 		logoLabel = new JLabel();
-		logoLabel.setBounds(520, 90, 250, 250);
-		logoLabel.setIcon(logo);
+		logoLabel.setBounds(460, 10, 250, 250);
+		logoLabel.setIcon(logo250);
 		add(logoLabel);
 	}
 
 	public void catalogPanel(){
+		setLayout(null);
+
+		logoLabel = new JLabel();
+		logoLabel.setBounds(542, 11, 100, 100);
+		logoLabel.setIcon(logo100);
+		add(logoLabel);
+
+		catalogButton = new JButton("CATALOG");
+		catalogButton.setFont(new Font("Air Americana", Font.PLAIN, 40));
+		catalogButton.setBounds(7, 11, 530, 100);
+		catalogButton.setBackground(Color.WHITE);
+		catalogButton.setOpaque(true);
+		catalogButton.setBorder(null);
+		catalogButton.setFocusPainted(false);
+
+		add(catalogButton);
+
+		accountButton =new JButton("ACCOUNT");
+		accountButton.setFont(new Font("Air Americana", Font.PLAIN, 40));
+		accountButton.setBounds(646, 11, 530, 100);
+		accountButton.setBackground(Color.WHITE);
+		accountButton.setOpaque(true);
+		accountButton.setBorder(null);
+		accountButton.setFocusPainted(false);
+
+		add(accountButton);
 
 	}
 
