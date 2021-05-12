@@ -73,20 +73,18 @@ public class Customer extends User implements FileRead {
                         default: userMap.get(i).add(" ");
                     }
                 }
-                for(int j=0; j<userMap.size(); j++){
-                    if(userEmail.equals(userMap.get(j).get(0))){
+                for(int j=0; j<userMap.size(); j++)
+                    if (userEmail.equals(userMap.get(j).get(0))) {
                         break;
-                    }else{
+                    } else {
                         result = true;
                         Map<Integer, Object[]> userData = new HashMap<>();
-                        Object[] objects;
-                        objects = new Object[] {userEmail, password, "c", i+1};
-                        userData.put(i+1, objects);
-                        Set<Integer> newRows = userData.keySet();
+                        userData.put(userMap.size(), new Object[]{userEmail, password, "c", j+1});
+                        Set<Integer> newUserRows = userData.keySet();
                         int userrownum = userSheet.getLastRowNum();
-                        for (Integer userKey : newRows) {
-                            Row row = userSheet.createRow(userrownum++);
-                            Object [] objArr = userData.get(userKey);
+                        for (Integer key : newUserRows) {
+                            Row row = userSheet.createRow(++userrownum);
+                            Object[] objArr = userData.get(key);
                             int cellnum = 0;
                             for (Object obj : objArr) {
                                 Cell cell = row.createCell(cellnum++);
@@ -115,22 +113,21 @@ public class Customer extends User implements FileRead {
                             for (Cell customerCell : customerRow) {
                                 switch (customerCell.getCellType()) {
                                     case STRING:
-                                        customerMap.get(k).add(customerCell.getRichStringCellValue().getString());
+                                        customerMap.get(j).add(customerCell.getRichStringCellValue().getString());
                                         break;
                                     case NUMERIC:
                                         if (DateUtil.isCellDateFormatted(customerCell)) {
-                                            customerMap.get(k).add(customerCell.getDateCellValue() + "");
+                                            customerMap.get(j).add(customerCell.getDateCellValue() + "");
                                         } else {
-                                            customerMap.get(k).add(customerCell.getNumericCellValue() + "");
+                                            customerMap.get(j).add(customerCell.getNumericCellValue() + "");
                                         }
                                         break;
                                     default:
-                                        customerMap.get(k).add(" ");
+                                        customerMap.get(j).add(" ");
                                 }
                             }
-                            k++;
                             Map<Integer, Object[]> customerData = new HashMap<>();
-                            customerData.put(2, new Object[]{k+1, userShoeSize, userName});
+                            customerData.put(customerMap.size(), new Object[]{userName, userShoeSize, k + 1});
                             Set<Integer> newCustomerRows = customerData.keySet();
                             int customerrownum = customerSheet.getLastRowNum();
                             for (Integer key : newCustomerRows) {
@@ -155,8 +152,8 @@ public class Customer extends User implements FileRead {
                             FileOutputStream customerOs = new FileOutputStream("D:\\Shop\\src\\main\\java\\Shop\\essa.xlsx");
                             workbook.write(customerOs);
                         }
+                        k++;
                     }
-                }
                 i++;
             }
         }
