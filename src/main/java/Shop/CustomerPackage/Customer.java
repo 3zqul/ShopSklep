@@ -46,7 +46,7 @@ public class Customer extends User implements FileRead {
 
     }
 
-    public Boolean registerCustomer(String password, String userEmail, String userName, int userShoeSize) {
+    public Boolean registerCustomer(String password, String userEmail, String userName, Integer userShoeSize) {
         Boolean result = false;
 
         try{
@@ -79,23 +79,27 @@ public class Customer extends User implements FileRead {
                     }else{
                         result = true;
                         Map<Integer, Object[]> userData = new HashMap<>();
-                        userData.put(i+1, new Object[] {userEmail, password, "c", i+1});
+                        Object[] objects;
+                        objects = new Object[] {userEmail, password, "c", i+1};
+                        userData.put(i+1, objects);
                         Set<Integer> newRows = userData.keySet();
                         int userrownum = userSheet.getLastRowNum();
                         for (Integer userKey : newRows) {
-                                Row row = userSheet.createRow(userrownum++);
-                                Object [] objArr = userData.get(userKey);
-                                int cellnum = 0;
-                                for (Object obj : objArr) {
-                                    Cell cell = row.createCell(cellnum++);
-                                    if (obj instanceof String) {
-                                        cell.setCellValue((String) obj);
-                                    } else if (obj instanceof Boolean) {
-                                        cell.setCellValue((Boolean) obj);
-                                    } else if (obj instanceof Date) {
-                                        cell.setCellValue((Date) obj);
-                                    } else if (obj instanceof Double) {
-                                        cell.setCellValue((Double) obj);
+                            Row row = userSheet.createRow(userrownum++);
+                            Object [] objArr = userData.get(userKey);
+                            int cellnum = 0;
+                            for (Object obj : objArr) {
+                                Cell cell = row.createCell(cellnum++);
+                                if (obj instanceof String) {
+                                    cell.setCellValue((String) obj);
+                                } else if (obj instanceof Boolean) {
+                                    cell.setCellValue((Boolean) obj);
+                                } else if (obj instanceof Date) {
+                                    cell.setCellValue((Date) obj);
+                                } else if (obj instanceof Double) {
+                                    cell.setCellValue((Double) obj);
+                                } else if (obj instanceof Integer) {
+                                    cell.setCellValue((Integer) obj);
                                 }
                             }
                         }
@@ -104,7 +108,7 @@ public class Customer extends User implements FileRead {
                         }
 
                         Sheet customerSheet = workbook.getSheet("Customer");
-                        Map<Integer, List<String>> customerMap = new HashMap<>();
+                        Map<Integer, ArrayList<String>> customerMap = new HashMap<>();
                         int k=0;
                         for(Row customerRow : customerSheet) {
                             customerMap.put(k, new ArrayList<>());
@@ -126,11 +130,11 @@ public class Customer extends User implements FileRead {
                             }
                             k++;
                             Map<Integer, Object[]> customerData = new HashMap<>();
-                            customerData.put(k+1, new Object[]{k, userShoeSize, userName});
+                            customerData.put(2, new Object[]{k+1, userShoeSize, userName});
                             Set<Integer> newCustomerRows = customerData.keySet();
                             int customerrownum = customerSheet.getLastRowNum();
                             for (Integer key : newCustomerRows) {
-                                Row row = customerSheet.createRow(customerrownum++);
+                                Row row = customerSheet.createRow(++customerrownum);
                                 Object[] objArr = customerData.get(key);
                                 int cellnum = 0;
                                 for (Object obj : objArr) {
@@ -143,6 +147,8 @@ public class Customer extends User implements FileRead {
                                         cell.setCellValue((Date) obj);
                                     } else if (obj instanceof Double) {
                                         cell.setCellValue((Double) obj);
+                                    } else if (obj instanceof Integer) {
+                                        cell.setCellValue((Integer) obj);
                                     }
                                 }
                             }
