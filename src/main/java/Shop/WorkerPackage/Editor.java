@@ -9,7 +9,7 @@ public class Editor extends User {
     }
 
     @Override
-    public boolean signIn(String userEmail, String password) {
-        return true;
+    public String signIn(String userEmail, String password) {
+        return "true";
     }
 }

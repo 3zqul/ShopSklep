@@ -3,7 +3,7 @@ package Shop.WorkerPackage;
 public class Administrator extends Editor{
 
     @Override
-    public boolean signIn(String userEmail, String password){
-        return true;
+    public String signIn(String userEmail, String password){
+        return "true";
     }
 }

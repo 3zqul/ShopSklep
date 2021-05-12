@@ -24,7 +24,7 @@ public class Panels extends JPanel implements ActionListener{
 	private JButton catalogButton;
 	private JButton accountButton;
 	ImageIcon logo250 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
-	ImageIcon logo100 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
+	ImageIcon logo100 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo100.png");
 
 	public Panels(){
 		loginPanel();
@@ -61,8 +61,7 @@ public class Panels extends JPanel implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Customer customer = new Customer();
-				if(customer.readUserID("User", passwordField.getText(), emailField.getText())){
-					System.out.println("elo");
+				if(customer.signIn(passwordField.getText(), emailField.getText()).equals("c")){
 					removeAll();
 					catalogPanel();
 					repaint();
@@ -76,6 +75,7 @@ public class Panels extends JPanel implements ActionListener{
 		logInButton.setBackground(Color.WHITE);
 		logInButton.setOpaque(true);
 		logInButton.setBorder(null);
+		logInButton.setFocusPainted(false);
 		add(logInButton);
 
 		createAccountButton = new JButton("Create Account");
@@ -85,6 +85,7 @@ public class Panels extends JPanel implements ActionListener{
 		createAccountButton.setOpaque(true);
 		createAccountButton.setBorder(null);
 		createAccountButton.setVerticalAlignment(JButton.CENTER);
+		createAccountButton.setFocusPainted(false);
 		add(createAccountButton);
 
 		logoLabel = new JLabel();
@@ -120,7 +121,6 @@ public class Panels extends JPanel implements ActionListener{
 		accountButton.setFocusPainted(false);
 
 		add(accountButton);
-
 	}
 
 	@Override

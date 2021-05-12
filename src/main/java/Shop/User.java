@@ -7,5 +7,5 @@ public abstract class User {
     protected String userEmail;
     protected int userType;
 
-    abstract public boolean signIn(String userEmail, String password);
+    abstract public String signIn(String userEmail, String password);
 }
