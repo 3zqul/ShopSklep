@@ -47,7 +47,8 @@ public class Customer extends User implements FileRead {
     }
 
     public Boolean registerCustomer(String password, String userEmail, String userName, Integer userShoeSize) {
-        Boolean result = false;
+        boolean result = false;
+
 
         try{
             Workbook workbook;
@@ -78,13 +79,18 @@ public class Customer extends User implements FileRead {
                         break;
                     } else {
                         result = true;
-                        Map<Integer, Object[]> userData = new HashMap<>();
-                        userData.put(userMap.size(), new Object[]{userEmail, password, "c", j+1});
+                        ArrayList<String> userDataList = new ArrayList<>();
+                        userDataList.add(userEmail);
+                        userDataList.add(password);
+                        userDataList.add("c");
+                        userDataList.add(Integer.toString(userMap.size()));
+                        Map<Integer, ArrayList<String>> userData = new HashMap<>();
+                        userData.put(userMap.size(), userDataList);
                         Set<Integer> newUserRows = userData.keySet();
                         int userrownum = userSheet.getLastRowNum();
                         for (Integer key : newUserRows) {
                             Row row = userSheet.createRow(++userrownum);
-                            Object[] objArr = userData.get(key);
+                            ArrayList<String> objArr = userData.get(key);
                             int cellnum = 0;
                             for (Object obj : objArr) {
                                 Cell cell = row.createCell(cellnum++);
@@ -101,14 +107,12 @@ public class Customer extends User implements FileRead {
                                 }
                             }
                         }
-                        try (FileOutputStream userOs = new FileOutputStream(file)) {
-                            workbook.write(userOs);
-                        }
-
+                        FileOutputStream userOs = new FileOutputStream(file);
+                        workbook.write(userOs);
                         Sheet customerSheet = workbook.getSheet("Customer");
                         Map<Integer, ArrayList<String>> customerMap = new HashMap<>();
                         int k=0;
-                        for(Row customerRow : customerSheet) {
+                        for (Row customerRow : customerSheet) {
                             customerMap.put(k, new ArrayList<>());
                             for (Cell customerCell : customerRow) {
                                 switch (customerCell.getCellType()) {
@@ -126,13 +130,18 @@ public class Customer extends User implements FileRead {
                                         customerMap.get(j).add(" ");
                                 }
                             }
-                            Map<Integer, Object[]> customerData = new HashMap<>();
-                            customerData.put(customerMap.size(), new Object[]{userName, userShoeSize, k + 1});
+                            Map<Integer, ArrayList<String>> customerData = new HashMap<>();
+                            ArrayList<String> customerDataList = new ArrayList<>();
+                            customerDataList.add(userEmail);
+                            customerDataList.add(password);
+                            customerDataList.add("c");
+                            customerDataList.add(Integer.toString(userMap.size()));
+                            userData.put(userMap.size(), customerDataList);
                             Set<Integer> newCustomerRows = customerData.keySet();
                             int customerrownum = customerSheet.getLastRowNum();
                             for (Integer key : newCustomerRows) {
                                 Row row = customerSheet.createRow(++customerrownum);
-                                Object[] objArr = customerData.get(key);
+                                ArrayList<String> objArr = customerData.get(key);
                                 int cellnum = 0;
                                 for (Object obj : objArr) {
                                     Cell cell = row.createCell(cellnum++);
@@ -149,10 +158,12 @@ public class Customer extends User implements FileRead {
                                     }
                                 }
                             }
-                            FileOutputStream customerOs = new FileOutputStream("D:\\Shop\\src\\main\\java\\Shop\\essa.xlsx");
+                            FileOutputStream customerOs = new FileOutputStream(file);
                             workbook.write(customerOs);
+                            customerOs.close();
+                            userOs.close();
+                            k++;
                         }
-                        k++;
                     }
                 i++;
             }
