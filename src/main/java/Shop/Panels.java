@@ -66,7 +66,7 @@ public class Panels extends JPanel implements ActionListener{
 		logInButton = new JButton("Sign In");
 		logInButton.setFont(new Font("Air Americana", Font.PLAIN, 25));
 		logInButton.setBounds(604, 418, 212, 45);
-		ActionListener actionListenerLog = new ActionListener() {
+		var actionListenerLog = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(customer.readUserID(emailField.getText(), passwordField.getText()).equals("c")){
@@ -91,7 +91,7 @@ public class Panels extends JPanel implements ActionListener{
 		createAccountButton.setFont(new Font("Air Americana", Font.PLAIN, 25));
 		createAccountButton.setBounds(368, 418, 212, 45);
 		createAccountButton.setBackground(Color.WHITE);
-		ActionListener actionListenerCreate = new ActionListener() {
+		var actionListenerCreate = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removeAll();
@@ -211,7 +211,7 @@ public class Panels extends JPanel implements ActionListener{
 		registerButton.setFont(new Font("Air Americana", Font.PLAIN, 25));
 		registerButton.setBounds(605, 418, 212, 45);
 		registerButton.setBackground(Color.WHITE);
-		ActionListener actionListenerRegister = new ActionListener() {
+		var actionListenerRegister = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(sizeList.getSelectedIndex()!=-1 && emailField.getText()!= null && nameField.getText()!=null && passwordField.getText()!=null) {
@@ -237,7 +237,7 @@ public class Panels extends JPanel implements ActionListener{
 		backButton.setFont(new Font("Air Americana", Font.PLAIN, 25));
 		backButton.setBounds(605, 470, 212, 45);
 		backButton.setBackground(Color.WHITE);
-		ActionListener actionListenerBack = new ActionListener() {
+		var actionListenerBack = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removeAll();
