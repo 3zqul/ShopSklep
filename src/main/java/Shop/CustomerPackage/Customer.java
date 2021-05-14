@@ -19,7 +19,7 @@ public class Customer extends User implements FileRead {
     protected Order userOrder;
     private final File  file = new File("D:\\Shop\\src\\main\\java\\Shop\\essa.xlsx");
 
-    public Customer() {}
+    public Customer(){}
 
     public Customer(int userShoeSize, String userName, Payout userPayout, Payment userPayment, Address userAddress, Offer userOffer, Order userOrder){
         this.userAddress=userAddress;
@@ -44,10 +44,9 @@ public class Customer extends User implements FileRead {
 
     }
 
-    @Override
-    public Boolean registerCustomer(String password, String userEmail, String userName, Integer userShoeSize) {
-        boolean result = false;
 
+    public boolean signUp(String userEmail, String userName, String password, int userShoeSize){
+        boolean result = false;
 
         try{
             Workbook workbook;
@@ -125,6 +124,7 @@ public class Customer extends User implements FileRead {
             customerDataList.add(userName);
             customerDataList.add(Integer.toString(userShoeSize));
             customerDataList.add(Integer.toString(i));
+            customerDataList.add(String.valueOf(userAddress=new Address("Dupa", "Elo", "eslo", "Polen")));
             Map<Integer, ArrayList<String>> customerData = new HashMap<>();
             customerData.put(i, customerDataList);
             Set<Integer> newCustomerRows = customerData.keySet();
@@ -158,13 +158,8 @@ public class Customer extends User implements FileRead {
         return result;
     }
 
-    public boolean signUp(String userEmail, String userName, String password, int userShoeSize){
-
-        return registerCustomer(password, userEmail, userName, userShoeSize);
-    }
-
     @Override
-    public String readUserID(String sheetName, String password, String userEmail) {
+    public String readUserID(String userEmail, String password) {
         Float converter;
         String result = null;
 
@@ -173,7 +168,7 @@ public class Customer extends User implements FileRead {
             try (FileInputStream readFile = new FileInputStream(file)) {
                 workbook = new XSSFWorkbook(readFile);
             }
-            Sheet sheet = workbook.getSheet(sheetName);
+            Sheet sheet = workbook.getSheet("User");
             Map<Integer, List<String>> map = new HashMap<>();
             int i=0;
             for(Row row : sheet){
@@ -215,8 +210,8 @@ public class Customer extends User implements FileRead {
     }
 
     @Override
-    public String signIn(String password, String userEmail) {
+    public String signIn(String userEmail, String password) {
 
-        return readUserID("User", password, userEmail);
+        return readUserID(userEmail, password);
     }
 }

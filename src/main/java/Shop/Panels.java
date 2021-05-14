@@ -1,6 +1,5 @@
 package Shop;
 
-import Shop.*;
 import Shop.CustomerPackage.Customer;
 
 import javax.swing.JPanel;
@@ -70,7 +69,7 @@ public class Panels extends JPanel implements ActionListener{
 		ActionListener actionListenerLog = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(customer.readUserID("User", passwordField.getText(), emailField.getText()).equals("c")){
+				if(customer.readUserID(emailField.getText(), passwordField.getText()).equals("c")){
 					System.out.println("elo");
 					removeAll();
 					catalogPanel();
