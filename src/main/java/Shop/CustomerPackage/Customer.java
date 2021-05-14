@@ -5,9 +5,7 @@ import Shop.User;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.*;
 
 public class Customer extends User implements FileRead {
@@ -46,6 +44,7 @@ public class Customer extends User implements FileRead {
 
     }
 
+    @Override
     public Boolean registerCustomer(String password, String userEmail, String userName, Integer userShoeSize) {
         boolean result = false;
 
@@ -70,103 +69,88 @@ public class Customer extends User implements FileRead {
                                 userMap.get(i).add(userCell.getDateCellValue() + "");
                             } else {
                                 userMap.get(i).add(userCell.getNumericCellValue() + "");
-                            } break;
+                            }
+                            break;
                         default: userMap.get(i).add(" ");
+                            break;
                     }
                 }
-                for(int j=0; j<userMap.size(); j++)
-                    if (userEmail.equals(userMap.get(j).get(0))) {
-                        break;
-                    } else {
-                        result = true;
-                        ArrayList<String> userDataList = new ArrayList<>();
-                        userDataList.add(userEmail);
-                        userDataList.add(password);
-                        userDataList.add("c");
-                        userDataList.add(Integer.toString(userMap.size()));
-                        Map<Integer, ArrayList<String>> userData = new HashMap<>();
-                        userData.put(userMap.size(), userDataList);
-                        Set<Integer> newUserRows = userData.keySet();
-                        int userrownum = userSheet.getLastRowNum();
-                        for (Integer key : newUserRows) {
-                            Row row = userSheet.createRow(++userrownum);
-                            ArrayList<String> objArr = userData.get(key);
-                            int cellnum = 0;
-                            for (Object obj : objArr) {
-                                Cell cell = row.createCell(cellnum++);
-                                if (obj instanceof String) {
-                                    cell.setCellValue((String) obj);
-                                } else if (obj instanceof Boolean) {
-                                    cell.setCellValue((Boolean) obj);
-                                } else if (obj instanceof Date) {
-                                    cell.setCellValue((Date) obj);
-                                } else if (obj instanceof Double) {
-                                    cell.setCellValue((Double) obj);
-                                } else if (obj instanceof Integer) {
-                                    cell.setCellValue((Integer) obj);
-                                }
-                            }
-                        }
-                        FileOutputStream userOs = new FileOutputStream(file);
-                        workbook.write(userOs);
-                        Sheet customerSheet = workbook.getSheet("Customer");
-                        Map<Integer, ArrayList<String>> customerMap = new HashMap<>();
-                        int k=0;
-                        for (Row customerRow : customerSheet) {
-                            customerMap.put(k, new ArrayList<>());
-                            for (Cell customerCell : customerRow) {
-                                switch (customerCell.getCellType()) {
-                                    case STRING:
-                                        customerMap.get(j).add(customerCell.getRichStringCellValue().getString());
-                                        break;
-                                    case NUMERIC:
-                                        if (DateUtil.isCellDateFormatted(customerCell)) {
-                                            customerMap.get(j).add(customerCell.getDateCellValue() + "");
-                                        } else {
-                                            customerMap.get(j).add(customerCell.getNumericCellValue() + "");
-                                        }
-                                        break;
-                                    default:
-                                        customerMap.get(j).add(" ");
-                                }
-                            }
-                            Map<Integer, ArrayList<String>> customerData = new HashMap<>();
-                            ArrayList<String> customerDataList = new ArrayList<>();
-                            customerDataList.add(userEmail);
-                            customerDataList.add(password);
-                            customerDataList.add("c");
-                            customerDataList.add(Integer.toString(userMap.size()));
-                            userData.put(userMap.size(), customerDataList);
-                            Set<Integer> newCustomerRows = customerData.keySet();
-                            int customerrownum = customerSheet.getLastRowNum();
-                            for (Integer key : newCustomerRows) {
-                                Row row = customerSheet.createRow(++customerrownum);
-                                ArrayList<String> objArr = customerData.get(key);
-                                int cellnum = 0;
-                                for (Object obj : objArr) {
-                                    Cell cell = row.createCell(cellnum++);
-                                    if (obj instanceof String) {
-                                        cell.setCellValue((String) obj);
-                                    } else if (obj instanceof Boolean) {
-                                        cell.setCellValue((Boolean) obj);
-                                    } else if (obj instanceof Date) {
-                                        cell.setCellValue((Date) obj);
-                                    } else if (obj instanceof Double) {
-                                        cell.setCellValue((Double) obj);
-                                    } else if (obj instanceof Integer) {
-                                        cell.setCellValue((Integer) obj);
-                                    }
-                                }
-                            }
-                            FileOutputStream customerOs = new FileOutputStream(file);
-                            workbook.write(customerOs);
-                            customerOs.close();
-                            userOs.close();
-                            k++;
-                        }
-                    }
                 i++;
             }
+            for(int j=0; j<userMap.size(); ++j) {
+                if (userEmail.equals(userMap.get(j).get(0))) {
+                    break;
+                } else {
+                    result = true;
+                }
+            }
+            ArrayList<String> userDataList = new ArrayList<>();
+            userDataList.add(userEmail);
+            userDataList.add(password);
+            userDataList.add("c");
+            userDataList.add(Integer.toString(i));
+            Map<Integer, ArrayList<String>> userData = new HashMap<>();
+            userData.put(i, userDataList);
+            Set<Integer> newUserRows = userData.keySet();
+            int userrownum = userSheet.getLastRowNum();
+            for (Integer key : newUserRows) {
+                Row row = userSheet.createRow(++userrownum);
+                ArrayList<String> objArr = userData.get(key);
+                int cellnum1 = 0;
+                for (Object obj : objArr) {
+                    Cell cell = row.createCell(cellnum1++);
+                    if (obj instanceof String) {
+                        cell.setCellValue((String) obj);
+                    } else if (obj instanceof Boolean) {
+                        cell.setCellValue((Boolean) obj);
+                    } else if (obj instanceof Date) {
+                        cell.setCellValue((Date) obj);
+                    } else if (obj instanceof Double) {
+                        cell.setCellValue((Double) obj);
+                    } else if (obj instanceof Integer) {
+                        cell.setCellValue((Integer) obj);
+                    }
+                }
+            }
+            FileOutputStream userOs = new FileOutputStream(file);
+            workbook.write(userOs);
+            userOs.close();
+
+            Workbook workbook2;
+            try (FileInputStream inputFile = new FileInputStream(file)) {
+                workbook2 = new XSSFWorkbook(inputFile);
+            }
+            Sheet customerSheet = workbook2.getSheet("Customer");
+            ArrayList<String> customerDataList = new ArrayList<>();
+            customerDataList.add(userName);
+            customerDataList.add(Integer.toString(userShoeSize));
+            customerDataList.add(Integer.toString(i));
+            Map<Integer, ArrayList<String>> customerData = new HashMap<>();
+            customerData.put(i, customerDataList);
+            Set<Integer> newCustomerRows = customerData.keySet();
+            int customerrownum = customerSheet.getLastRowNum();
+            for (Integer key : newCustomerRows) {
+                Row row = customerSheet.createRow(++customerrownum);
+                ArrayList<String> objArr = customerData.get(key);
+                int cellnum2 = 0;
+                for (Object obj : objArr) {
+                    Cell cell = row.createCell(cellnum2++);
+                    if (obj instanceof String) {
+                        cell.setCellValue((String) obj);
+                    } else if (obj instanceof Boolean) {
+                        cell.setCellValue((Boolean) obj);
+                    } else if (obj instanceof Date) {
+                        cell.setCellValue((Date) obj);
+                    } else if (obj instanceof Double) {
+                        cell.setCellValue((Double) obj);
+                    } else if (obj instanceof Integer) {
+                        cell.setCellValue((Integer) obj);
+                    }
+                }
+            }
+            FileOutputStream customerOs = new FileOutputStream(file);
+            workbook2.write(customerOs);
+            customerOs.close();
         }
         catch (Exception e){
             e.printStackTrace();
