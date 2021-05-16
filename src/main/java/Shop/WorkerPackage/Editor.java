@@ -5,7 +5,6 @@ import Shop.User;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Editor extends User implements FileRead {
-
-    private final File file = new File("D:\\Shop\\src\\main\\java\\Shop\\essa.xlsx");
 
     public Editor(){
 

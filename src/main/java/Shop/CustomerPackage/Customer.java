@@ -17,7 +17,6 @@ public class Customer extends User implements FileRead {
     protected Address userAddress;
     protected Offer userOffer;
     protected Order userOrder;
-    private final File  file = new File("D:\\Shop\\src\\main\\java\\Shop\\essa.xlsx");
 
     public Customer(){}
 
@@ -32,7 +31,7 @@ public class Customer extends User implements FileRead {
     }
 
     public void displayOrders(){
-
+        
     }
     public void displayAccount(){
 
@@ -211,7 +210,6 @@ public class Customer extends User implements FileRead {
 
     @Override
     public String signIn(String userEmail, String password) {
-
         return readUserID(userEmail, password);
     }
 }
