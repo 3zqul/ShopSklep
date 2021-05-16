@@ -29,6 +29,8 @@ public class Panels extends JPanel implements ActionListener{
 	private JButton catalogButton;
 	private JButton accountButton;
 	private DefaultListModel<String> sizes;
+	private JList<String> list;
+	private DefaultListModel<String> model;
 	private Customer customer = new Customer();
 
 	ImageIcon logo250 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
@@ -141,6 +143,68 @@ public class Panels extends JPanel implements ActionListener{
 
 		add(accountButton);
 
+	}
+
+	public void accountPanel(){
+		setLayout(null);
+
+		logoLabel = new JLabel();
+		logoLabel.setBounds(542, 11, 100, 100);
+		logoLabel.setIcon(logo100);
+		add(logoLabel);
+
+		catalogButton = new JButton("CATALOG");
+		catalogButton.setFont(new Font("Air Americana", Font.PLAIN, 40));
+		catalogButton.setBounds(7, 11, 530, 100);
+		catalogButton.setBackground(Color.WHITE);
+		catalogButton.setOpaque(true);
+		catalogButton.setBorder(null);
+		catalogButton.setFocusPainted(false);
+
+		add(catalogButton);
+
+		accountButton =new JButton("ACCOUNT");
+		accountButton.setFont(new Font("Air Americana", Font.PLAIN, 40));
+		accountButton.setBounds(646, 11, 530, 100);
+		accountButton.setBackground(Color.WHITE);
+		accountButton.setOpaque(true);
+		accountButton.setBorder(null);
+		accountButton.setFocusPainted(false);
+
+		add(accountButton);
+
+		model = new DefaultListModel<>();
+
+		model.addElement("Account");
+		model.addElement("Offers");
+		model.addElement("Orders");
+		model.addElement("Edit Account");
+
+		list = new JList<>(model);
+		list.setValueIsAdjusting(true);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.setFont(new Font("Air Americana", Font.PLAIN, 25));
+		list.setBounds(7,122, 119,542);
+		list.setFixedCellHeight(40);
+		list.setSelectionBackground(Color.LIGHT_GRAY);
+		list.setBorder(null);
+		list.getSelectionModel().addListSelectionListener(e ->{
+			switch( list.getSelectedIndex()){
+				case 0:
+					changeAccountPanel("Account");
+
+			}
+
+		});
+
+		add(list);
+	}
+
+	public void changeAccountPanel(String panel){
+		if(panel.equals("Account")){
+
+
+		}
 	}
 
 	public void registerPanel(){

@@ -36,11 +36,149 @@ public class Customer extends User implements FileRead {
     public void displayAccount(){
 
     }
-    public void changePassword(){
+    public boolean changePassword(String password){
+        boolean result = false;
 
+        try {
+            Workbook workbook;
+            FileInputStream inputFile = new FileInputStream(file);
+            workbook = new XSSFWorkbook(inputFile);
+            Sheet userSheet = workbook.getSheet("User");
+            Map<Integer, List<String>> map = new HashMap<>();
+            int i=0;
+            for(Row userRow : userSheet){
+                map.put(i, new ArrayList<>());
+                for(Cell userCell : userRow){
+                    switch (userCell.getCellType()){
+                        case STRING:
+                            map.get(i).add(userCell.getRichStringCellValue().getString());
+                            break;
+                        case NUMERIC:
+                            if (DateUtil.isCellDateFormatted(userCell)) {
+                                map.get(i).add(userCell.getDateCellValue() + "");
+                            } else {
+                                map.get(i).add(userCell.getNumericCellValue() + "");
+                            }
+                            break;
+                        default: map.get(i).add(" ");
+                            break;
+                    }
+                }
+                i++;
+                if(map.get(i).get(3).equals(userID)) {
+                    this.password=password;
+                    break;
+                }
+            }
+            ArrayList<String> dataList = new ArrayList<>();
+            dataList.add(userName);
+            dataList.add(String.valueOf(userShoeSize));
+            dataList.add(String.valueOf(userID));
+            Map<Integer, ArrayList<String>> userData = new HashMap<>();
+            userData.put(i, dataList);
+            Set<Integer> newCustomerrRows = userData.keySet();
+            int customerrownum = userSheet.getLastRowNum();
+            for (Integer key : newCustomerrRows) {
+                Row row = userSheet.createRow(++customerrownum);
+                ArrayList<String> objArr = userData.get(key);
+                int cellnum1 = 0;
+                for (Object obj : objArr) {
+                    Cell cell = row.createCell(cellnum1++);
+                    if (obj instanceof String) {
+                        cell.setCellValue((String) obj);
+                    } else if (obj instanceof Boolean) {
+                        cell.setCellValue((Boolean) obj);
+                    } else if (obj instanceof Date) {
+                        cell.setCellValue((Date) obj);
+                    } else if (obj instanceof Double) {
+                        cell.setCellValue((Double) obj);
+                    } else if (obj instanceof Integer) {
+                        cell.setCellValue((Integer) obj);
+                    }
+                }
+            }
+            FileOutputStream customerOs = new FileOutputStream(file);
+            workbook.write(customerOs);
+            customerOs.close();
+            result=true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
-    public void changeShoeSize(){
 
+    public boolean changeShoeSize(Integer userShoeSize){
+        boolean result = false;
+
+        try {
+            Workbook workbook;
+            FileInputStream inputFile = new FileInputStream(file);
+            workbook = new XSSFWorkbook(inputFile);
+            Sheet userSheet = workbook.getSheet("Customer");
+            Map<Integer, List<String>> map = new HashMap<>();
+            int i=0;
+            for(Row userRow : userSheet){
+                map.put(i, new ArrayList<>());
+                for(Cell userCell : userRow){
+                    switch (userCell.getCellType()){
+                        case STRING:
+                            map.get(i).add(userCell.getRichStringCellValue().getString());
+                            break;
+                        case NUMERIC:
+                            if (DateUtil.isCellDateFormatted(userCell)) {
+                                map.get(i).add(userCell.getDateCellValue() + "");
+                            } else {
+                                map.get(i).add(userCell.getNumericCellValue() + "");
+                            }
+                            break;
+                        default: map.get(i).add(" ");
+                            break;
+                    }
+                }
+                i++;
+                if(map.get(i).get(2).equals(userID)) {
+                    this.userShoeSize=userShoeSize;
+                    break;
+                }
+            }
+            ArrayList<String> dataList = new ArrayList<>();
+            dataList.add(this.userEmail);
+            dataList.add(this.password);
+            dataList.add("c");
+            dataList.add(Integer.toString(this.userID));
+            Map<Integer, ArrayList<String>> userData = new HashMap<>();
+            userData.put(i, dataList);
+            Set<Integer> newUserRows = userData.keySet();
+            int userrownum = userSheet.getLastRowNum();
+            for (Integer key : newUserRows) {
+                Row row = userSheet.createRow(++userrownum);
+                ArrayList<String> objArr = userData.get(key);
+                int cellnum1 = 0;
+                for (Object obj : objArr) {
+                    Cell cell = row.createCell(cellnum1++);
+                    if (obj instanceof String) {
+                        cell.setCellValue((String) obj);
+                    } else if (obj instanceof Boolean) {
+                        cell.setCellValue((Boolean) obj);
+                    } else if (obj instanceof Date) {
+                        cell.setCellValue((Date) obj);
+                    } else if (obj instanceof Double) {
+                        cell.setCellValue((Double) obj);
+                    } else if (obj instanceof Integer) {
+                        cell.setCellValue((Integer) obj);
+                    }
+                }
+            }
+            FileOutputStream userOs = new FileOutputStream(file);
+            workbook.write(userOs);
+            userOs.close();
+            result=true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 
@@ -49,9 +187,8 @@ public class Customer extends User implements FileRead {
 
         try{
             Workbook workbook;
-            try (FileInputStream inputFile = new FileInputStream(file)) {
-                workbook = new XSSFWorkbook(inputFile);
-            }
+            FileInputStream inputFile = new FileInputStream(file);
+            workbook = new XSSFWorkbook(inputFile);
             Sheet userSheet = workbook.getSheet("User");
             Map<Integer, List<String>> userMap = new HashMap<>();
             int i=0;
@@ -115,9 +252,9 @@ public class Customer extends User implements FileRead {
             userOs.close();
 
             Workbook workbook2;
-            try (FileInputStream inputFile = new FileInputStream(file)) {
-                workbook2 = new XSSFWorkbook(inputFile);
-            }
+            FileInputStream inputFile2 = new FileInputStream(file);
+            workbook2 = new XSSFWorkbook(inputFile2);
+
             Sheet customerSheet = workbook2.getSheet("Customer");
             ArrayList<String> customerDataList = new ArrayList<>();
             customerDataList.add(userName);
@@ -161,12 +298,12 @@ public class Customer extends User implements FileRead {
     public String readUserID(String userEmail, String password) {
         Float converter;
         String result = null;
+        int index=0;
 
         try{
             Workbook workbook;
-            try (FileInputStream readFile = new FileInputStream(file)) {
-                workbook = new XSSFWorkbook(readFile);
-            }
+            FileInputStream readFile = new FileInputStream(file);
+            workbook = new XSSFWorkbook(readFile);
             Sheet sheet = workbook.getSheet("User");
             Map<Integer, List<String>> map = new HashMap<>();
             int i=0;
@@ -199,10 +336,40 @@ public class Customer extends User implements FileRead {
                         case "e" -> result = "e";
                         case "a" -> result = "a";
                     }
+                    index=j;
+                    break;
                 }
             }
-        }
-        catch (Exception e){
+            if(result.equals("c")){
+                Workbook workbook2;
+                FileInputStream readFile2 = new FileInputStream(file);
+                workbook2 = new XSSFWorkbook(readFile2);
+                Sheet sheet2 = workbook2.getSheet("Customer");
+                Map<Integer, List<String>> map2 = new HashMap<>();
+                int j=0;
+                for(Row row : sheet2){
+                    map2.put(j, new ArrayList<>());
+                    for(Cell cell : row){
+                        switch (cell.getCellType()){
+                            case STRING:
+                                map2.get(j).add(cell.getRichStringCellValue().getString());
+                                break;
+                            case NUMERIC:
+                                if (DateUtil.isCellDateFormatted(cell)) {
+                                    map2.get(j).add(cell.getDateCellValue() + "");
+                                } else {
+                                    map2.get(j).add(cell.getNumericCellValue() + "");
+                                }
+                                break;
+                            default: map2.get(j).add(" ");
+                        }
+                    }
+                    j++;
+                }
+                this.userName=map2.get(index).get(0);
+                this.userShoeSize= Integer.parseInt(map2.get(index).get(1));
+            }
+        }catch (Exception e){
             e.printStackTrace();
         }
         return result;
