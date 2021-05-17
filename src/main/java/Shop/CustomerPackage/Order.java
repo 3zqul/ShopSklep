@@ -1,21 +1,27 @@
 package Shop.CustomerPackage;
 
+import Shop.WorkerPackage.Shoe;
+
 import java.util.Date;
 
 public class Order {
 
     int orderID;
-    Date orderDate;
-    int customerID;
+    String orderDate;
     int sellerID;
-    OrderDetails orderDetails;
+    int customerID;
+    ShoeDetails shoeDetails;
 
-    public Order(int orderID, Date orderDate, int customerID, int sellerID, OrderDetails orderDetails){
+    public Order(int orderID, String orderDate, int customerID, int sellerID, ShoeDetails shoeDetails){
         this.orderID=orderID;
         this.orderDate=orderDate;
-        this.customerID=customerID;
-        this.orderDetails=orderDetails;
         this.sellerID=sellerID;
+        this.customerID=customerID;
+        this.shoeDetails=shoeDetails;
+    }
+
+    public Order() {
+
     }
 
     public void createOrder(){

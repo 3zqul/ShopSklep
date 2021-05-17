@@ -71,7 +71,7 @@ public class Panels extends JPanel implements ActionListener{
 		var actionListenerLog = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(customer.readUserID(emailField.getText(), passwordField.getText()).equals("c")){
+				if(customer.signIn(emailField.getText(), passwordField.getText()).equals("c")){
 					System.out.println("elo");
 					removeAll();
 					catalogPanel();

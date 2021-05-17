@@ -1,6 +1,5 @@
 package Shop.WorkerPackage;
 
-import Shop.FileRead;
 import Shop.User;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -11,17 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Editor extends User implements FileRead {
+public class Editor extends User{
 
     public Editor(){
 
     }
 
     @Override
-    public String readUserID(String userEmail, String password) {
-
+    public String signIn(String userEmail, String password) {
         Float converter;
-        String result = null;
 
         try{
             Workbook workbook;
@@ -55,22 +52,13 @@ public class Editor extends User implements FileRead {
                     userID = converter.intValue();
                     this.password=password;
                     this.userEmail=userEmail;
-                    switch (map.get(j).get(2)) {
-                        case "c" -> result = "c";
-                        case "e" -> result = "e";
-                        case "a" -> result = "a";
-                    }
+
                 }
             }
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        return result;
-    }
-
-    @Override
-    public String signIn(String userEmail, String password) {
-        return readUserID(userEmail, password);
+        return "e";
     }
 }
