@@ -1,5 +1,6 @@
 package Shop.WorkerPackage;
 
+import Shop.CatalogForPanels;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 
 public class Catalog {
 
-    ArrayList<Shoe> shoeList= new ArrayList<>();
+    protected ArrayList<Shoe> shoeList= new ArrayList<>();
     Shoe shoe;
     Float convert;
 
@@ -21,7 +22,7 @@ public class Catalog {
         this.shoeList=shoeList;
     }
 
-    public Catalog() {}
+    public Catalog() {readShoeList();}
 
     public void readShoeList(){
         try {
@@ -53,19 +54,13 @@ public class Catalog {
                 shoe= new Shoe();
                 convert = new Float(map.get(j).get(0));
                 shoe.shoeID = convert.intValue();
-                System.out.println(shoe.shoeID);
                 shoe.shoeName = map.get(j).get(1);
-                System.out.println(shoe.shoeName);
                 convert = new Float(map.get(j).get(2));
                 shoe.shoeSize = convert.intValue();
-                System.out.println(shoe.shoeSize);
                 convert = new Float(map.get(j).get(3));
                 shoe.shoeBuyPrice = convert;
-                System.out.println(shoe.shoeBuyPrice);
                 convert = new Float(map.get(j).get(4));
                 shoe.shoeSellPrice = convert;
-                System.out.println(shoe.shoeSellPrice);
-                System.out.println();
                 shoeList.add(shoe);
             }
         } catch (NullPointerException | IOException | NumberFormatException e) {

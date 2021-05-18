@@ -5,21 +5,19 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 public class Editor extends User{
 
-    public Editor(){
+    Catalog catalog = new Catalog();
 
-    }
+    public Editor(){}
 
     @Override
     public String signIn(String userEmail, String password) {
         Float converter;
-
         try{
             Workbook workbook;
             try (FileInputStream readFile = new FileInputStream(file)) {
@@ -60,5 +58,78 @@ public class Editor extends User{
             e.printStackTrace();
         }
         return "e";
+    }
+
+    public Shoe toList(int i){
+        while(i<catalog.shoeList.size()){
+            return catalog.shoeList.get(i);
+        }
+        return null;
+    }
+
+    public void addShoe(String shoeName){
+        for(int i=0; i<8; i++) {
+            catalog.shoeList.add(new Shoe(catalog.shoeList.size()+1, shoeName, 38+i, new Float(0), new Float(0)));
+        }
+    }
+
+    public void deleteShoe(String shoeName){
+        for(int i=catalog.shoeList.size()-1; i>=1; i--){
+            if(catalog.shoeList.get(i).shoeName.equals(shoeName)){
+                catalog.shoeList.remove(i);
+            }
+        }
+    }
+
+    public void saveToFile() {
+        try {
+            Workbook workbook;
+            FileInputStream inputFile2 = new FileInputStream(file);
+            workbook = new XSSFWorkbook(inputFile2);
+            Sheet sheet = workbook.getSheet("Shoe");
+            Map<Integer, ArrayList<String>> map = new HashMap<>();
+            ArrayList<String> data;
+            int j=0;
+            for(int i=0; i<catalog.shoeList.size(); i++) {
+                data = new ArrayList<>();
+                data.add(String.valueOf(catalog.shoeList.get(i).shoeID));
+                data.add(catalog.shoeList.get(i).shoeName);
+                data.add(String.valueOf(catalog.shoeList.get(i).shoeSize));
+                data.add(String.valueOf(catalog.shoeList.get(i).shoeBuyPrice));
+                data.add(String.valueOf(catalog.shoeList.get(i).shoeSellPrice));
+                System.out.println(data);
+                map.put(j, data);
+                j++;
+            }
+
+            Set<Integer> newRows = map.keySet();
+            int rownum = sheet.getLastRowNum();
+            for (Integer key : newRows) {
+                Row row = sheet.createRow(++rownum);
+                ArrayList<String> objArr = map.get(key);
+                int cellnum = 0;
+                for (Object obj : objArr) {
+                    Cell cell = row.createCell(cellnum++);
+                    if (obj instanceof String) {
+                        cell.setCellValue((String) obj);
+                    } else if (obj instanceof Boolean) {
+                        cell.setCellValue((Boolean) obj);
+                    } else if (obj instanceof Date) {
+                        cell.setCellValue((Date) obj);
+                    } else if (obj instanceof Double) {
+                        cell.setCellValue((Double) obj);
+                    } else if (obj instanceof Integer) {
+                        cell.setCellValue((Integer) obj);
+                    }
+                }
+            }
+
+            FileOutputStream customerOs = new FileOutputStream(file);
+            workbook.write(customerOs);
+            customerOs.close();
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

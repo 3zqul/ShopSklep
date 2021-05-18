@@ -5,11 +5,11 @@ import javax.swing.*;
 public class Window {
 
 	public JFrame frame;
-	ImageIcon shoe10 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
+	ImageIcon shoe10 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\shoe10.png");
 
 	public Window() {
 		initialize();
-		Panels panel = new Panels();
+		Panels panel = new Panels(frame);
 		frame.add(panel);
 	}
 

@@ -6,9 +6,9 @@ public class Payment {
     String cardName;
     int cardExpiryMonth;
     int cardExpiryYear;
-    int cardCVV;
+    String cardCVV;
 
-    public Payment(String cardNo, String cardName, int cardExpiryYear, int cardExpiryMonth, int cardCVV){
+    public Payment(String cardNo, String cardName, int cardExpiryYear, int cardExpiryMonth, String cardCVV){
         this.cardCVV=cardCVV;
         this.cardExpiryMonth=cardExpiryMonth;
         this.cardExpiryYear=cardExpiryYear;
@@ -18,5 +18,11 @@ public class Payment {
 
     public void editPayment(String cardName, String cardNo, int cardExpiryMonth, int cardExpiryYear, int cardCVV){
 
+    }
+
+    @Override
+    public String toString(){
+
+        return "Card name: " + this.cardName + " Card number: " + this.cardNo + " Expiry date: " + this.cardExpiryMonth +"/"+this.cardExpiryYear + " CVV: " + this.cardCVV;
     }
 }
