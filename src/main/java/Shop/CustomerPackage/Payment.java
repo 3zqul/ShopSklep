@@ -15,11 +15,6 @@ public class Payment {
         this.cardName=cardName;
         this.cardNo=cardNo;
     }
-
-    public void editPayment(String cardName, String cardNo, int cardExpiryMonth, int cardExpiryYear, int cardCVV){
-
-    }
-
     @Override
     public String toString(){
 

@@ -101,7 +101,6 @@ public class Editor extends User{
                     data.add(String.valueOf(catalog.shoeList.get(i).shoeSize));
                     data.add(String.valueOf(catalog.shoeList.get(i).shoeBuyPrice));
                     data.add(String.valueOf(catalog.shoeList.get(i).shoeSellPrice));
-                    System.out.println(data);
                     map.put(j, data);
                     j++;
                     if(j>7){
@@ -109,7 +108,6 @@ public class Editor extends User{
                     }
                 }
             }
-
             Set<Integer> newRows = map.keySet();
             int rownum = sheet.getLastRowNum();
             for (Integer key : newRows) {

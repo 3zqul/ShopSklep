@@ -22,7 +22,7 @@ public class Customer extends User {
     public Customer() {
     }
 
-    public Customer(int userShoeSize, String userName, Payout userPayout, Payment userPayment, Address userAddress, List<Offer> offerList, List<Order> orderList) {
+    public Customer(int userID, String password, String userEmail, int userShoeSize, String userName, Payout userPayout, Payment userPayment, Address userAddress, List<Offer> offerList, List<Order> orderList) {
         this.userAddress = userAddress;
         this.userName = userName;
         this.offerList = offerList;
@@ -30,15 +30,18 @@ public class Customer extends User {
         this.userPayment = userPayment;
         this.userPayout = userPayout;
         this.userShoeSize = userShoeSize;
+        this.userID = userID;
+        this.password = password;
+        this.userEmail = userEmail;
     }
 
-    public void displayOrders() {
+    public void displayOrders() {}
 
-    }
+    public void displayOffers() {}
 
     public String displayAccount() {
 
-        return "<html>Name: " + this.userName + "<br/> E- mail: " + this.userEmail + "<br/>Payment: " + "null" + "<br/>Payout:  " + "null" + "<br/> Adress: " + "null" + "</html>";
+        return "<html>Name: " + this.userName + "<br/> E- mail: " + this.userEmail + "<br/>Payment: " + userPayment.toString() + "<br/>Payout:  " + userPayout.toString() + "<br/> Adress: " + userAddress.toString() + "</html>";
     }
 
     public void editCustomer(String name, String password, int size, String confirmPass, String cardNo, int month, int year, String cvv, String street, String city, String postalCode, String country) {
@@ -92,17 +95,16 @@ public class Customer extends User {
                 i++;
             }
             for (int j = 0; j < userMap.size(); ++j) {
-                if (userEmail.equals(userMap.get(j).get(0))) {
-                    break;
-                } else {
+                if (userEmail.equals(userMap.get(j).get(1))) {
                     result = true;
+                    break;
                 }
             }
             ArrayList<String> userDataList = new ArrayList<>();
+            userDataList.add(Integer.toString(i));
             userDataList.add(userEmail);
             userDataList.add(password);
             userDataList.add("c");
-            userDataList.add(Integer.toString(i));
             Map<Integer, ArrayList<String>> userData = new HashMap<>();
             userData.put(i, userDataList);
             Set<Integer> newUserRows = userData.keySet();
@@ -133,12 +135,11 @@ public class Customer extends User {
             Workbook workbook2;
             FileInputStream inputFile2 = new FileInputStream(file);
             workbook2 = new XSSFWorkbook(inputFile2);
-
             Sheet customerSheet = workbook2.getSheet("Customer");
             ArrayList<String> customerDataList = new ArrayList<>();
+            customerDataList.add(Integer.toString(i));
             customerDataList.add(userName);
             customerDataList.add(Integer.toString(userShoeSize));
-            customerDataList.add(Integer.toString(i));
             Map<Integer, ArrayList<String>> customerData = new HashMap<>();
             customerData.put(i, customerDataList);
             Set<Integer> newCustomerRows = customerData.keySet();
@@ -169,14 +170,13 @@ public class Customer extends User {
             Workbook workbook3;
             FileInputStream inputFile3 = new FileInputStream(file);
             workbook3 = new XSSFWorkbook(inputFile3);
-
             Sheet addressSheet = workbook3.getSheet("Address");
             ArrayList<String> addressDataList = new ArrayList<>();
+            addressDataList.add(String.valueOf(i));
             addressDataList.add(address.street);
             addressDataList.add(address.city);
             addressDataList.add(address.postalCode);
             addressDataList.add(address.country);
-            addressDataList.add(String.valueOf(i));
             Map<Integer, ArrayList<String>> addressData = new HashMap<>();
             addressData.put(i, addressDataList);
             Set<Integer> newAddressRows = addressData.keySet();
@@ -210,12 +210,12 @@ public class Customer extends User {
 
             Sheet paymentSheet = workbook4.getSheet("Payment");
             ArrayList<String> paymentDataList = new ArrayList<>();
+            paymentDataList.add(String.valueOf(i));
             paymentDataList.add(payment.cardNo);
             paymentDataList.add(payment.cardName);
             paymentDataList.add(String.valueOf(payment.cardExpiryYear));
             paymentDataList.add(String.valueOf(payment.cardExpiryMonth));
             paymentDataList.add(payment.cardCVV);
-            paymentDataList.add(String.valueOf(i));
             Map<Integer, ArrayList<String>> paymentData = new HashMap<>();
             paymentData.put(i, paymentDataList);
             Set<Integer> newPaymentRows = paymentData.keySet();
@@ -249,9 +249,9 @@ public class Customer extends User {
 
             Sheet payoutSheet = workbook5.getSheet("Payout");
             ArrayList<String> payoutDataList = new ArrayList<>();
+            payoutDataList.add(String.valueOf(i));
             payoutDataList.add(payout.accountNo);
             payoutDataList.add(payout.accountName);
-            payoutDataList.add(String.valueOf(i));
             Map<Integer, ArrayList<String>> payoutData = new HashMap<>();
             payoutData.put(i, payoutDataList);
             Set<Integer> newPayoutRows = payoutData.keySet();
@@ -286,12 +286,12 @@ public class Customer extends User {
 
     public String readUserID(String userEmail, String password) {
         Float converter;
+        String result=null;
 
         try {
             Workbook workbook;
-            try (FileInputStream readFile = new FileInputStream(file)) {
-                workbook = new XSSFWorkbook(readFile);
-            }
+            FileInputStream readFile = new FileInputStream(file);
+            workbook = new XSSFWorkbook(readFile);
             Sheet sheet = workbook.getSheet("User");
             Map<Integer, List<String>> map = new HashMap<>();
             int i = 0;
@@ -316,11 +316,14 @@ public class Customer extends User {
                 i++;
             }
             for (int j = 1; j < map.size(); j++) {
-                if (!map.get(j).get(2).equals(password) && !map.get(j).get(1).equals(userEmail)) {
+                if (map.get(j).get(2).equals(password) && map.get(j).get(1).equals(userEmail)) {
+                    result = "c";
                     converter = new Float(map.get(j).get(0));
                     userID = converter.intValue();
                     this.password = password;
                     this.userEmail = userEmail;
+                }else{
+                    result = "b";
                 }
             }
             try {
@@ -350,7 +353,6 @@ public class Customer extends User {
                     }
                     count2++;
                 }
-                System.out.println(map2);
                 for (int j = 1; j < map2.size() - 1; j++) {
                     if (!map2.get(j).get(0).equals(String.valueOf(userID))) {
                         userName = map2.get(j).get(1);
@@ -359,7 +361,6 @@ public class Customer extends User {
                         break;
                     }
                 }
-                System.out.println(userID);
             } catch (IOException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
             }
@@ -604,7 +605,7 @@ public class Customer extends User {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "c";
+        return result;
     }
 
     @Override

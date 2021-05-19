@@ -27,7 +27,7 @@ public class Catalog {
     public void readShoeList(){
         try {
             Workbook workbook;
-            FileInputStream readFile = new FileInputStream(new File("D:\\Shop\\src\\main\\java\\Shop\\essa.xlsx"));
+            FileInputStream readFile = new FileInputStream(new File("D:\\Shop\\src\\main\\java\\Shop\\DataBase.xlsx"));
             workbook = new XSSFWorkbook(readFile);
             Sheet sheet = workbook.getSheet("Shoe");
             Map<Integer, List<String>> map = new HashMap<>();
@@ -63,7 +63,6 @@ public class Catalog {
                 shoe.shoeSellPrice = convert;
                 shoeList.add(shoe);
             }
-            System.out.println(shoeList);
         } catch (NullPointerException | IOException | NumberFormatException e) {
             e.printStackTrace();
         }

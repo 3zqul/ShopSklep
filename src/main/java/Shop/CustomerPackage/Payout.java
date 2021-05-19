@@ -9,8 +9,4 @@ public class Payout {
         this.accountName=accountName;
         this.accountNo=accountNo;
     }
-
-    public void editPayout(String accountName, String accountNo, Address accountAddress){
-
-    }
 }

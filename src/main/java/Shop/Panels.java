@@ -119,13 +119,10 @@ public class Panels extends JPanel implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(customer.readUserID(passwordField.getText(), emailField.getText()).equals("c")){
-					System.out.println("elo");
 					removeAll();
 					catalogPanel();
 					repaint();
 					revalidate();
-				}else{
-					System.out.println("dupa");
 				}
 			}
 		};
@@ -344,6 +341,7 @@ public class Panels extends JPanel implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				repaint();
 				revalidate();
+
 			}
 		};
 		registerButton.addActionListener(actionListerConfirm);
@@ -555,10 +553,7 @@ public class Panels extends JPanel implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				customer.editCustomer(nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())) ,confirmPasswordField.getText(), cardField.getText(), Integer.parseInt(monthField.getText()),Integer.parseInt(yearField.getText()),CvvField.getText(), streetField.getText(), cityField.getText() , postalCodeField.getText(), countryField.getText());
-				repaint();
-				revalidate();
-				System.out.println("essa");
-
+				accountLabel.setText(customer.displayAccount());
 			}
 		};
 		confirmButton.addActionListener(actionListerConfirm);
@@ -587,26 +582,19 @@ public class Panels extends JPanel implements ActionListener{
 				case 0:
 					accountLabel.setVisible(true);
 					editAccountVisibility(false);
-					repaint();
-					revalidate();
 					break;
 				case 1:
 					accountLabel.setVisible(false);
 					editAccountVisibility(false);
-					repaint();
-					revalidate();
 					break;
 				case 2:
 					accountLabel.setVisible(false);
 					editAccountVisibility(false);
-					repaint();
-					revalidate();
 					break;
 				case 3:
 					accountLabel.setVisible(false);
 					editAccountVisibility(true);
-					repaint();
-					revalidate();
+
 					break;
 
 			}
@@ -718,23 +706,33 @@ public class Panels extends JPanel implements ActionListener{
 		shoeList=new JList<>(shoes);
 		shoeList.setFont(new Font("Air Americana", Font.PLAIN, 25));
 		shoeList.getSelectionModel().addListSelectionListener(e ->{
-			Shoe shoe = shoeList.getSelectedValue();
-			shoeLabel.setText(shoe.toString());
-			if(Float.toString(shoe.buyNowPrice()).equals("0.0")) {
-				buyNowButton.setText("no offers yet");
-			}else {
-				buyNowButton.setText("buy now: " + Float.toString(shoe.buyNowPrice()) + "pln");
+
+			if(shoeList.getSelectedIndex()!=-1) {
+				Shoe shoe = shoeList.getSelectedValue();
+				shoeLabel.setText(shoe.toString());
+				if (Float.toString(shoe.buyNowPrice()).equals("0.0")) {
+					buyNowButton.setText("no offers yet");
+				} else {
+					buyNowButton.setText("buy now: " + Float.toString(shoe.buyNowPrice()) + "pln");
+				}
+				if (Float.toString(shoe.quickSellPrice()).equals("0.0")) {
+					quickSellButton.setText("no asks yet");
+				} else {
+					quickSellButton.setText("quick sell: " + Float.toString(shoe.quickSellPrice()) + "pln");
+				}
+
+				shoeLabel.setVisible(true);
+				buyNowButton.setVisible(true);
+				quickSellButton.setVisible(true);
+				askButton.setVisible(true);
+				bidButton.setVisible(true);
+			}else{
+				shoeLabel.setVisible(false);
+				buyNowButton.setVisible(false);
+				quickSellButton.setVisible(false);
+				askButton.setVisible(false);
+				bidButton.setVisible(false);
 			}
-			if(Float.toString(shoe.quickSellPrice()).equals("0.0")) {
-				quickSellButton.setText("no asks yet");
-			}else {
-				quickSellButton.setText("quick sell: " + Float.toString(shoe.quickSellPrice()) + "pln");
-			}
-			shoeLabel.setVisible(true);
-			buyNowButton.setVisible(true);
-			quickSellButton.setVisible(true);
-			askButton.setVisible(true);
-			bidButton.setVisible(true);
 		});
 		DefaultListCellRenderer renderer = (DefaultListCellRenderer)shoeList.getCellRenderer();
 		renderer.setVerticalAlignment(JLabel.BOTTOM);
@@ -822,6 +820,24 @@ public class Panels extends JPanel implements ActionListener{
 		searchShoeButton.setOpaque(true);
 		searchShoeButton.setBorder(null);
 		searchShoeButton.setFocusPainted(false);
+		ActionListener actionListenerSearch = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				shoeList.clearSelection();
+				shoes.removeAllElements();
+				if(shoeName.getText().equals("")){
+					catalog.aShoeList = catalog.searchShoe("all");
+				}else {
+					catalog.aShoeList = catalog.searchShoe(shoeName.getText());
+				}
+				for(int i = 0; i<catalog.aShoeList.size(); i++) {
+					shoes.add(i, catalog.aShoeList.get(i));
+					repaint();
+					revalidate();
+				}
+			}
+		};
+		searchShoeButton.addActionListener(actionListenerSearch);
 		panel.add(searchShoeButton);
 
 

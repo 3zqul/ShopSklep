@@ -12,9 +12,9 @@ public class Address {
         this.country=country;
         this.postalCode=postalCode;
     }
+    @Override
+    public String toString(){
 
-    public void editAddress(String street, String city, String postalCode, String Country){
-
-
+        return "Street: " + this.street + " City: " + this.city + " Postal code: " + this.postalCode + " Country: "+ this.country;
     }
 }

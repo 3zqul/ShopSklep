@@ -14,10 +14,7 @@ public class Offer {
         this.offerType=offerType;
         this.shoeID=shoeID;
         this.shoeSize=shoeSize;
-
     }
 
-    public Offer() {
-
-    }
+    public Offer() {}
 }
