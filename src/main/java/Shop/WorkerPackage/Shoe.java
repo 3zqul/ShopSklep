@@ -2,13 +2,13 @@ package Shop.WorkerPackage;
 
 public class Shoe {
 
-    Integer shoeID;
-    String shoeName;
-    Integer shoeSize;
+    int shoeID;
+    String  shoeName;
+    int shoeSize;
     Float shoeBuyPrice;
     Float shoeSellPrice;
 
-    public Shoe(Integer shoeID, String shoeName, Integer shoeSize, Float shoeBuyPrice, Float shoeSellPrice){
+    public Shoe(int shoeID, String shoeName, int shoeSize, Float shoeBuyPrice, Float shoeSellPrice){
         this.shoeID=shoeID;
         this.shoeName=shoeName;
         this.shoeSize=shoeSize;
@@ -16,11 +16,22 @@ public class Shoe {
         this.shoeSellPrice=shoeSellPrice;
     }
 
-    public Shoe() {
+    public Shoe(){
 
     }
 
+    @Override
     public String toString(){
-        return " shoeID = " + this.shoeID + " shoeName = " + this.shoeName + " shoeSize = " + this.shoeSize + " shoeBuyPrice = " + this.shoeBuyPrice + " shoeSellPrice = " + this.shoeSellPrice;
+
+        return shoeName + " " + shoeSize;
+    }
+
+    public Float buyNowPrice(){
+
+        return this.shoeBuyPrice;
+    }
+    public Float quickSellPrice(){
+
+        return this.shoeSellPrice;
     }
 }

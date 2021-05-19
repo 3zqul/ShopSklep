@@ -1,6 +1,7 @@
 package Shop;
 
 import Shop.CustomerPackage.Customer;
+import Shop.WorkerPackage.Shoe;
 
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -14,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 
 public class Panels extends JPanel implements ActionListener{
 	private JPasswordField passwordField;
@@ -32,8 +34,11 @@ public class Panels extends JPanel implements ActionListener{
 	private JButton accountButton;
 	private JLabel accountLabel;
 	private JList<String> sizeList;
+	private JList<Shoe> shoeList;
 	private DefaultListModel<String> sizes;
+	private DefaultListModel<Shoe> shoes;
 	private Customer customer = new Customer();
+	private CatalogForPanels catalog = new CatalogForPanels();
 	private JList<String> list;
 	private DefaultListModel<String> model;
 	private JLabel backgroundLabel;
@@ -59,9 +64,14 @@ public class Panels extends JPanel implements ActionListener{
 	private JTextField CvvField ;
 	private JButton confirmButton;
 	private JFrame frame;
-
-
-
+	private JSplitPane splitPane;
+	private JLabel shoeLabel;
+	private JButton buyNowButton;
+	private JButton quickSellButton;
+	private JButton bidButton;
+	private JButton askButton;
+	private JTextField shoeName;
+	private JButton searchShoeButton;
 
 
 
@@ -70,6 +80,8 @@ public class Panels extends JPanel implements ActionListener{
 	ImageIcon logo250 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
 	ImageIcon logo150 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo150.png");
 	ImageIcon logo100 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo100.png");
+
+
 
 	public Panels(JFrame frame){
 		this.frame= frame;
@@ -106,8 +118,8 @@ public class Panels extends JPanel implements ActionListener{
 		ActionListener actionListenerLog = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(customer.signIn(passwordField.getText(), emailField.getText()).equals("c")){
-					System.out.println(customer.userID);
+				if(customer.readUserID(passwordField.getText(), emailField.getText()).equals("c")){
+					System.out.println("elo");
 					removeAll();
 					catalogPanel();
 					repaint();
@@ -321,7 +333,7 @@ public class Panels extends JPanel implements ActionListener{
 		sizeList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		add(sizeList);
 
-		registerButton = new JButton("Register");
+		registerButton = new JButton("register");
 		registerButton.setOpaque(true);
 		registerButton.setFont(new Font("Air Americana", Font.PLAIN, 30));
 		registerButton.setFocusPainted(false);
@@ -332,7 +344,6 @@ public class Panels extends JPanel implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				repaint();
 				revalidate();
-
 			}
 		};
 		registerButton.addActionListener(actionListerConfirm);
@@ -534,7 +545,7 @@ public class Panels extends JPanel implements ActionListener{
 		sizeList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		add(sizeList);
 
-		confirmButton = new JButton("Confirm");
+		confirmButton = new JButton("confirm");
 		confirmButton.setOpaque(true);
 		confirmButton.setFont(new Font("Air Americana", Font.PLAIN, 30));
 		confirmButton.setFocusPainted(false);
@@ -543,7 +554,7 @@ public class Panels extends JPanel implements ActionListener{
 		ActionListener actionListerConfirm = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				customer.editCustomer(passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())) ,confirmPasswordField.getText(), cardField.getText(), Integer.parseInt(monthField.getText()),Integer.parseInt(yearField.getText()),CvvField.getText(), streetField.getText(), cityField.getText() , postalCodeField.getText(), countryField.getText());
+				customer.editCustomer(nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())) ,confirmPasswordField.getText(), cardField.getText(), Integer.parseInt(monthField.getText()),Integer.parseInt(yearField.getText()),CvvField.getText(), streetField.getText(), cityField.getText() , postalCodeField.getText(), countryField.getText());
 				repaint();
 				revalidate();
 				System.out.println("essa");
@@ -647,8 +658,14 @@ public class Panels extends JPanel implements ActionListener{
 
 		add(accountButton);
 
+
+
 		catalogButton.setBackground(Color.WHITE);
 		accountButton.setBackground(Color.LIGHT_GRAY);
+
+
+
+
 	}
 
 	public void catalogPanel(){
@@ -670,8 +687,8 @@ public class Panels extends JPanel implements ActionListener{
 		add(catalogButton);
 
 		accountButton =new JButton("ACCOUNT");
-		accountButton.setFont(new Font("Air Americana", Font.PLAIN, 40));
 		accountButton.setBounds(646, 11, 530, 100);
+		accountButton.setFont(new Font("Air Americana", Font.PLAIN, 40));
 		accountButton.setBackground(Color.WHITE);
 		accountButton.setOpaque(true);
 		accountButton.setBorder(null);
@@ -687,8 +704,127 @@ public class Panels extends JPanel implements ActionListener{
 			}
 		};
 		accountButton.addActionListener(actionListenerAccount);
-
 		add(accountButton);
+		catalog.readShoeList();
+		catalog.assign();
+
+		shoes = new DefaultListModel<>();
+		for(int i = 0 ; i < catalog.aShoeList.size(); i++){
+
+			shoes.add(i, catalog.aShoeList.get(i));
+
+		}
+
+		shoeList=new JList<>(shoes);
+		shoeList.setFont(new Font("Air Americana", Font.PLAIN, 25));
+		shoeList.getSelectionModel().addListSelectionListener(e ->{
+			Shoe shoe = shoeList.getSelectedValue();
+			shoeLabel.setText(shoe.toString());
+			if(Float.toString(shoe.buyNowPrice()).equals("0.0")) {
+				buyNowButton.setText("no offers yet");
+			}else {
+				buyNowButton.setText("buy now: " + Float.toString(shoe.buyNowPrice()) + "pln");
+			}
+			if(Float.toString(shoe.quickSellPrice()).equals("0.0")) {
+				quickSellButton.setText("no asks yet");
+			}else {
+				quickSellButton.setText("quick sell: " + Float.toString(shoe.quickSellPrice()) + "pln");
+			}
+			shoeLabel.setVisible(true);
+			buyNowButton.setVisible(true);
+			quickSellButton.setVisible(true);
+			askButton.setVisible(true);
+			bidButton.setVisible(true);
+		});
+		DefaultListCellRenderer renderer = (DefaultListCellRenderer)shoeList.getCellRenderer();
+		renderer.setVerticalAlignment(JLabel.BOTTOM);
+		shoeList.setCellRenderer(renderer);
+		shoeList.setFixedCellHeight(40);
+
+
+		splitPane = new JSplitPane();
+		splitPane.setEnabled(false);
+		splitPane.setDividerLocation(300);
+
+		JScrollPane scrollPane= new JScrollPane(shoeList);
+		scrollPane.getVerticalScrollBar().setBackground(Color.WHITE);
+		scrollPane.getVerticalScrollBar().setOpaque(true);
+		scrollPane.getVerticalScrollBar().setBorder(null);
+		splitPane.setBounds(7, 122, 1169, 515);
+		splitPane.setLeftComponent(scrollPane);
+		add(splitPane);
+
+		JPanel panel = new JPanel();
+
+		splitPane.setRightComponent(panel);
+		panel.setLayout(null);
+
+		buyNowButton = new JButton("Buy now");
+		buyNowButton.setBounds(29, 396, 318, 80);
+		buyNowButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		buyNowButton.setBackground(new Color(0, 98, 64));
+		buyNowButton.setForeground(Color.WHITE);
+		buyNowButton.setOpaque(true);
+		buyNowButton.setBorder(null);
+		buyNowButton.setFocusPainted(false);
+		buyNowButton.setVisible(false);
+		panel.add(buyNowButton);
+
+		quickSellButton = new JButton("quick sell");
+		quickSellButton.setBounds(516, 396, 318, 80);
+		quickSellButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		quickSellButton.setBackground(new Color(255, 90, 95));
+		quickSellButton.setForeground(Color.WHITE);
+		quickSellButton.setOpaque(true);
+		quickSellButton.setBorder(null);
+		quickSellButton.setFocusPainted(false);
+		quickSellButton.setVisible(false);
+		panel.add(quickSellButton);
+
+		bidButton = new JButton("place bid");
+		bidButton.setBounds(29, 262, 318, 80);
+		bidButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		bidButton.setBackground(new Color(0, 98, 64));
+		bidButton.setForeground(Color.WHITE);
+		bidButton.setOpaque(true);
+		bidButton.setBorder(null);
+		bidButton.setFocusPainted(false);
+		bidButton.setVisible(false);
+		panel.add(bidButton);
+
+		askButton = new JButton("place ask");
+		askButton.setBounds(516, 262, 318, 80);
+		askButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		askButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		askButton.setBackground(new Color(255, 90, 95));
+		askButton.setForeground(Color.WHITE);
+		askButton.setOpaque(true);
+		askButton.setBorder(null);
+		askButton.setFocusPainted(false);
+		askButton.setVisible(false);
+		panel.add(askButton);
+
+		shoeLabel = new JLabel();
+		shoeLabel.setBounds(29, 70, 607, 80);
+		shoeLabel.setFont(new Font("Air Americana", Font.PLAIN, 55));
+		shoeLabel.setVisible(false);
+		panel.add(shoeLabel);
+
+		shoeName = new JTextField();
+		shoeName.setBounds(29, 11, 644, 48);
+		shoeName.setColumns(10);
+		panel.add(shoeName);
+
+		searchShoeButton = new JButton("Search");
+		searchShoeButton.setBounds(683, 11, 151, 48);
+		searchShoeButton.setFont(new Font("Air Americana", Font.PLAIN, 30));
+		searchShoeButton.setBackground(Color.WHITE);
+		searchShoeButton.setOpaque(true);
+		searchShoeButton.setBorder(null);
+		searchShoeButton.setFocusPainted(false);
+		panel.add(searchShoeButton);
+
+
 
 	}
 

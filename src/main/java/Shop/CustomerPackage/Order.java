@@ -1,9 +1,5 @@
 package Shop.CustomerPackage;
 
-import Shop.WorkerPackage.Shoe;
-
-import java.util.Date;
-
 public class Order {
 
     int orderID;

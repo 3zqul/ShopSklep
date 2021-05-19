@@ -12,6 +12,7 @@ import java.util.*;
 public class Editor extends User{
 
     Catalog catalog = new Catalog();
+    List<String> nameList = new ArrayList<>();
 
     public Editor(){}
 
@@ -71,6 +72,7 @@ public class Editor extends User{
         for(int i=0; i<8; i++) {
             catalog.shoeList.add(new Shoe(catalog.shoeList.size()+1, shoeName, 38+i, new Float(0), new Float(0)));
         }
+        nameList.add(shoeName);
     }
 
     public void deleteShoe(String shoeName){
@@ -90,16 +92,22 @@ public class Editor extends User{
             Map<Integer, ArrayList<String>> map = new HashMap<>();
             ArrayList<String> data;
             int j=0;
+            int k=0;
             for(int i=0; i<catalog.shoeList.size(); i++) {
-                data = new ArrayList<>();
-                data.add(String.valueOf(catalog.shoeList.get(i).shoeID));
-                data.add(catalog.shoeList.get(i).shoeName);
-                data.add(String.valueOf(catalog.shoeList.get(i).shoeSize));
-                data.add(String.valueOf(catalog.shoeList.get(i).shoeBuyPrice));
-                data.add(String.valueOf(catalog.shoeList.get(i).shoeSellPrice));
-                System.out.println(data);
-                map.put(j, data);
-                j++;
+                if(catalog.shoeList.get(i).shoeName.equals(nameList.get(k))) {
+                    data = new ArrayList<>();
+                    data.add(String.valueOf(catalog.shoeList.get(i).shoeID));
+                    data.add(catalog.shoeList.get(i).shoeName);
+                    data.add(String.valueOf(catalog.shoeList.get(i).shoeSize));
+                    data.add(String.valueOf(catalog.shoeList.get(i).shoeBuyPrice));
+                    data.add(String.valueOf(catalog.shoeList.get(i).shoeSellPrice));
+                    System.out.println(data);
+                    map.put(j, data);
+                    j++;
+                    if(j>7){
+                        k++;
+                    }
+                }
             }
 
             Set<Integer> newRows = map.keySet();

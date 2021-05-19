@@ -7,9 +7,11 @@ import java.util.ArrayList;
 
 public class CatalogForPanels extends Catalog {
 
-    ArrayList<Shoe> shoeList = new ArrayList<>();
+    ArrayList<Shoe> aShoeList = new ArrayList<>();
 
-    public CatalogForPanels(ArrayList<Shoe> shoeList){
-        this.shoeList=shoeList;
+    public void assign(){
+
+        aShoeList = shoeList;
     }
+
 }

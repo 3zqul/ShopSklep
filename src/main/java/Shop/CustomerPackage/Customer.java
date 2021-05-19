@@ -1,5 +1,6 @@
 package Shop.CustomerPackage;
 
+import Shop.Panels;
 import Shop.User;
 import Shop.WorkerPackage.Shoe;
 import org.apache.poi.ss.usermodel.*;
@@ -40,9 +41,10 @@ public class Customer extends User {
         return "<html>Name: " + this.userName + "<br/> E- mail: " + this.userEmail + "<br/>Payment: " + "null" + "<br/>Payout:  " + "null" + "<br/> Adress: " + "null" + "</html>";
     }
 
-    public void editCustomer(String password, int size, String confirmPass, String cardNo, int month, int year, String cvv, String street, String city, String postalCode, String country) {
+    public void editCustomer(String name, String password, int size, String confirmPass, String cardNo, int month, int year, String cvv, String street, String city, String postalCode, String country) {
 
         this.userShoeSize = size;
+        this.userName=name;
 
         if (password.equals(confirmPass) && password != null) {
             this.password = password;
@@ -58,7 +60,7 @@ public class Customer extends User {
     }
 
 
-    public boolean signUp(String userEmail, String userName, String password, int userShoeSize) {
+    public boolean signUp(String userEmail, String userName, String password, int userShoeSize, Address address, Payment payment, Payout payout) {
         boolean result = false;
 
         try {
@@ -163,6 +165,119 @@ public class Customer extends User {
             FileOutputStream customerOs = new FileOutputStream(file);
             workbook2.write(customerOs);
             customerOs.close();
+
+            Workbook workbook3;
+            FileInputStream inputFile3 = new FileInputStream(file);
+            workbook3 = new XSSFWorkbook(inputFile3);
+
+            Sheet addressSheet = workbook3.getSheet("Address");
+            ArrayList<String> addressDataList = new ArrayList<>();
+            addressDataList.add(address.street);
+            addressDataList.add(address.city);
+            addressDataList.add(address.postalCode);
+            addressDataList.add(address.country);
+            addressDataList.add(String.valueOf(i));
+            Map<Integer, ArrayList<String>> addressData = new HashMap<>();
+            addressData.put(i, addressDataList);
+            Set<Integer> newAddressRows = addressData.keySet();
+            int addressrownum = addressSheet.getLastRowNum();
+            for (Integer key : newAddressRows) {
+                Row row = addressSheet.createRow(++addressrownum);
+                ArrayList<String> objArr = addressData.get(key);
+                int cellnum3 = 0;
+                for (Object obj : objArr) {
+                    Cell cell = row.createCell(cellnum3++);
+                    if (obj instanceof String) {
+                        cell.setCellValue((String) obj);
+                    } else if (obj instanceof Boolean) {
+                        cell.setCellValue((Boolean) obj);
+                    } else if (obj instanceof Date) {
+                        cell.setCellValue((Date) obj);
+                    } else if (obj instanceof Double) {
+                        cell.setCellValue((Double) obj);
+                    } else if (obj instanceof Integer) {
+                        cell.setCellValue((Integer) obj);
+                    }
+                }
+            }
+            FileOutputStream addressOs = new FileOutputStream(file);
+            workbook3.write(addressOs);
+            addressOs.close();
+
+            Workbook workbook4;
+            FileInputStream inputFile4 = new FileInputStream(file);
+            workbook4 = new XSSFWorkbook(inputFile4);
+
+            Sheet paymentSheet = workbook4.getSheet("Payment");
+            ArrayList<String> paymentDataList = new ArrayList<>();
+            paymentDataList.add(payment.cardNo);
+            paymentDataList.add(payment.cardName);
+            paymentDataList.add(String.valueOf(payment.cardExpiryYear));
+            paymentDataList.add(String.valueOf(payment.cardExpiryMonth));
+            paymentDataList.add(payment.cardCVV);
+            paymentDataList.add(String.valueOf(i));
+            Map<Integer, ArrayList<String>> paymentData = new HashMap<>();
+            paymentData.put(i, paymentDataList);
+            Set<Integer> newPaymentRows = paymentData.keySet();
+            int paymentnewrows = paymentSheet.getLastRowNum();
+            for (Integer key : newPaymentRows) {
+                Row row = paymentSheet.createRow(++paymentnewrows);
+                ArrayList<String> objArr = paymentData.get(key);
+                int cellnum4 = 0;
+                for (Object obj : objArr) {
+                    Cell cell = row.createCell(cellnum4++);
+                    if (obj instanceof String) {
+                        cell.setCellValue((String) obj);
+                    } else if (obj instanceof Boolean) {
+                        cell.setCellValue((Boolean) obj);
+                    } else if (obj instanceof Date) {
+                        cell.setCellValue((Date) obj);
+                    } else if (obj instanceof Double) {
+                        cell.setCellValue((Double) obj);
+                    } else if (obj instanceof Integer) {
+                        cell.setCellValue((Integer) obj);
+                    }
+                }
+            }
+            FileOutputStream paymentOs = new FileOutputStream(file);
+            workbook4.write(paymentOs);
+            paymentOs.close();
+
+            Workbook workbook5;
+            FileInputStream inputFile5 = new FileInputStream(file);
+            workbook5 = new XSSFWorkbook(inputFile5);
+
+            Sheet payoutSheet = workbook5.getSheet("Payout");
+            ArrayList<String> payoutDataList = new ArrayList<>();
+            payoutDataList.add(payout.accountNo);
+            payoutDataList.add(payout.accountName);
+            payoutDataList.add(String.valueOf(i));
+            Map<Integer, ArrayList<String>> payoutData = new HashMap<>();
+            payoutData.put(i, payoutDataList);
+            Set<Integer> newPayoutRows = payoutData.keySet();
+            int payoutnewrows = payoutSheet.getLastRowNum();
+            for (Integer key : newPayoutRows) {
+                Row row = payoutSheet.createRow(++payoutnewrows);
+                ArrayList<String> objArr = payoutData.get(key);
+                int cellnum5 = 0;
+                for (Object obj : objArr) {
+                    Cell cell = row.createCell(cellnum5++);
+                    if (obj instanceof String) {
+                        cell.setCellValue((String) obj);
+                    } else if (obj instanceof Boolean) {
+                        cell.setCellValue((Boolean) obj);
+                    } else if (obj instanceof Date) {
+                        cell.setCellValue((Date) obj);
+                    } else if (obj instanceof Double) {
+                        cell.setCellValue((Double) obj);
+                    } else if (obj instanceof Integer) {
+                        cell.setCellValue((Integer) obj);
+                    }
+                }
+            }
+            FileOutputStream payoutOs = new FileOutputStream(file);
+            workbook5.write(payoutOs);
+            payoutOs.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -201,8 +316,8 @@ public class Customer extends User {
                 i++;
             }
             for (int j = 1; j < map.size(); j++) {
-                if (map.get(j).get(1).equals(password) && map.get(j).get(0).equals(userEmail)) {
-                    converter = new Float(map.get(j).get(3));
+                if (!map.get(j).get(2).equals(password) && !map.get(j).get(1).equals(userEmail)) {
+                    converter = new Float(map.get(j).get(0));
                     userID = converter.intValue();
                     this.password = password;
                     this.userEmail = userEmail;
@@ -237,13 +352,14 @@ public class Customer extends User {
                 }
                 System.out.println(map2);
                 for (int j = 1; j < map2.size() - 1; j++) {
-                    if (map2.get(j).get(0).equals(String.valueOf(userID))) {
-                        this.userName = map2.get(j).get(1);
+                    if (!map2.get(j).get(0).equals(String.valueOf(userID))) {
+                        userName = map2.get(j).get(1);
                         converter = new Float(map2.get(j).get(2));
-                        this.userShoeSize = converter.intValue();
+                        userShoeSize = converter.intValue();
                         break;
                     }
                 }
+                System.out.println(userID);
             } catch (IOException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
             }
@@ -275,17 +391,13 @@ public class Customer extends User {
                     }
                     count3++;
                 }
-                System.out.println(map3);
-                for (int j = 0; j < map3.size(); j++) {
-                    if (map3.get(j).get(0).equals(String.valueOf(userID))) {
-                        this.userAddress.street = map3.get(j).get(1);
-                        this.userAddress.postalCode = map3.get(j).get(2);
-                        this.userAddress.city = map3.get(j).get(3);
-                        this.userAddress.country = map3.get(j).get(4);
+                for (int j = 1; j < map3.size(); j++) {
+                    if (!map3.get(j).get(0).equals(String.valueOf(userID))) {
+                        userAddress = new Address(map3.get(j).get(1), map3.get(j).get(2), map3.get(j).get(3), map3.get(j).get(4));
                         break;
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
             }
 
@@ -316,20 +428,15 @@ public class Customer extends User {
                     }
                     count4++;
                 }
-                System.out.println(map4);
-                for (int j = 0; j < map4.size(); j++) {
-                    if (map4.get(j).get(0).equals(String.valueOf(userID))) {
-                        this.userPayment.cardNo = map4.get(j).get(1);
-                        this.userPayment.cardName = map4.get(j).get(2);
-                        converter = new Float(map4.get(j).get(3));
-                        this.userPayment.cardExpiryYear = converter.intValue();
-                        converter = new Float(map4.get(j).get(4));
-                        this.userPayment.cardExpiryMonth = converter.intValue();
-                        this.userPayment.cardCVV = map4.get(j).get(5);
+                for (int j = 1; j < map4.size(); j++) {
+                    if (!map4.get(j).get(0).equals(String.valueOf(userID))) {
+                        Float converter1 = new Float(map4.get(j).get(3));
+                        Float converter2 = new Float(map4.get(j).get(4));
+                        userPayment = new Payment(map4.get(j).get(1), map4.get(j).get(2), converter1.intValue(), converter2.intValue(), map4.get(j).get(5));
                         break;
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
             }
 
@@ -360,12 +467,9 @@ public class Customer extends User {
                     }
                     count5++;
                 }
-                System.out.println(map5);
-                for (int j = 0; j < map5.size(); j++) {
-                    if (map5.get(j).get(0).equals(String.valueOf(userID))) {
-                        this.userPayout.accountNo = map5.get(j).get(1);
-                        this.userPayout.accountName = map5.get(j).get(2);
-                        this.userPayout.accountAddress = this.userAddress;
+                for (int j = 1; j < map5.size(); j++) {
+                    if (!map5.get(j).get(0).equals(String.valueOf(userID))) {
+                        userPayout = new Payout(map5.get(j).get(1), map5.get(j).get(2));
                         break;
                     }
                 }
@@ -400,9 +504,9 @@ public class Customer extends User {
                     }
                     count6++;
                 }
-                System.out.println(map6);
-                for (int j = 0; j < map6.size(); j++) {
-                    if (map6.get(j).get(0).equals(String.valueOf(userID))) {
+                offerList = new ArrayList<>();
+                for (int j = 1; j < map6.size(); j++) {
+                    if (!map6.get(j).get(0).equals(String.valueOf(userID))) {
                         Offer offer = new Offer();
                         converter = new Float(map6.get(j).get(1));
                         offer.offerID = converter.intValue();
@@ -412,7 +516,7 @@ public class Customer extends User {
                         converter = new Float(map6.get(j).get(4));
                         offer.offerPrice = converter;
                         offer.offerType = map6.get(j).get(5);
-                        this.offerList.add(offer);
+                        offerList.add(offer);
                     }
                 }
             } catch (IOException e) {
@@ -445,7 +549,6 @@ public class Customer extends User {
                 }
                 count7++;
             }
-            System.out.println(map7);
             Workbook workbook8;
             FileInputStream readFile8 = new FileInputStream(file);
             workbook8 = new XSSFWorkbook(readFile8);
@@ -472,9 +575,9 @@ public class Customer extends User {
                 }
                 count8++;
             }
-            System.out.println(map8);
-            for (int k = 0; k < map8.size(); k++) {
-                if (map8.get(k).get(0).equals(String.valueOf(userID))) {
+            orderList = new ArrayList<>();
+            for (int k = 1; k < map8.size(); k++) {
+                if (!map8.get(k).get(0).equals(String.valueOf(userID))) {
                     ShoeDetails shoeDetails = new ShoeDetails();
                     converter = new Float(map8.get(k).get(1));
                     shoeDetails.orderID = converter.intValue();
@@ -482,17 +585,17 @@ public class Customer extends User {
                     converter = new Float(map8.get(k).get(3));
                     shoeDetails.shoePrice = converter;
                     shoeDetails.shoeSize = map8.get(k).get(4);
-                    for (int j = 0; j < map7.size(); j++) {
-                        if (map7.get(j).get(0).equals(String.valueOf(userID)) && map7.get(j).get(1).equals(String.valueOf(shoeDetails.orderID))) {
+                    for (int j = 1; j < map7.size(); j++) {
+                        if (!map7.get(j).get(0).equals(String.valueOf(userID)) && !map7.get(j).get(1).equals(String.valueOf(shoeDetails.orderID))) {
                             Order order = new Order();
-                            converter = new Float(map8.get(j).get(0));
+                            converter = new Float(map7.get(j).get(0));
                             order.orderID = converter.intValue();
-                            order.orderDate = map8.get(j).get(1);
-                            converter = new Float(map8.get(j).get(2));
+                            order.orderDate = map7.get(j).get(1);
+                            converter = new Float(map7.get(j).get(2));
                             order.sellerID = converter.intValue();
                             order.customerID = this.userID;
                             order.shoeDetails = shoeDetails;
-                            this.orderList.add(order);
+                            orderList.add(order);
                             break;
                         }
                     }

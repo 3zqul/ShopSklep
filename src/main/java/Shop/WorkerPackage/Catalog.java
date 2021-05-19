@@ -15,8 +15,8 @@ import java.util.Map;
 public class Catalog {
 
     protected ArrayList<Shoe> shoeList= new ArrayList<>();
-    Shoe shoe;
     Float convert;
+    Shoe shoe;
 
     public Catalog(ArrayList<Shoe> shoeList){
         this.shoeList=shoeList;
@@ -50,8 +50,8 @@ public class Catalog {
                 }
                 i++;
             }
-            for(int j=2; j<map.size()+1; j++) {
-                shoe= new Shoe();
+            for (int j = 2; j < map.size() + 1; j++) {
+                shoe = new Shoe();
                 convert = new Float(map.get(j).get(0));
                 shoe.shoeID = convert.intValue();
                 shoe.shoeName = map.get(j).get(1);
@@ -63,6 +63,7 @@ public class Catalog {
                 shoe.shoeSellPrice = convert;
                 shoeList.add(shoe);
             }
+            System.out.println(shoeList);
         } catch (NullPointerException | IOException | NumberFormatException e) {
             e.printStackTrace();
         }
@@ -74,7 +75,6 @@ public class Catalog {
                 result.add(shoeList.get(i));
             }
         }
-        System.out.println(result);
         return result;
     }
 }

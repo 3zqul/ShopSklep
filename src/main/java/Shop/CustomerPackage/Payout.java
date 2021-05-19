@@ -4,10 +4,8 @@ public class Payout {
 
     String accountNo;
     String accountName;
-    Address accountAddress;
 
-    public Payout(String accountNo, String accountName, Address accountAddress){
-        this.accountAddress=accountAddress;
+    public Payout(String accountNo, String accountName){
         this.accountName=accountName;
         this.accountNo=accountNo;
     }
