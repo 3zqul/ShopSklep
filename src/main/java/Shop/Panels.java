@@ -1,6 +1,10 @@
 package Shop;
 
+import Shop.CustomerPackage.Address;
 import Shop.CustomerPackage.Customer;
+import Shop.CustomerPackage.Payment;
+import Shop.CustomerPackage.Payout;
+import Shop.WorkerPackage.Catalog;
 import Shop.WorkerPackage.Shoe;
 
 import javax.swing.JPanel;
@@ -11,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.event.ListSelectionEvent;
@@ -38,7 +43,7 @@ public class Panels extends JPanel implements ActionListener{
 	private DefaultListModel<String> sizes;
 	private DefaultListModel<Shoe> shoes;
 	private Customer customer = new Customer();
-	private CatalogForPanels catalog = new CatalogForPanels();
+	private Catalog catalog= new Catalog();
 	private JList<String> list;
 	private DefaultListModel<String> model;
 	private JLabel backgroundLabel;
@@ -61,7 +66,7 @@ public class Panels extends JPanel implements ActionListener{
 	private JTextField cardField ;
 	private JTextField monthField ;
 	private JTextField yearField ;
-	private JTextField CvvField ;
+	private JTextField cvvField;
 	private JButton confirmButton;
 	private JFrame frame;
 	private JSplitPane splitPane;
@@ -72,7 +77,7 @@ public class Panels extends JPanel implements ActionListener{
 	private JButton askButton;
 	private JTextField shoeName;
 	private JButton searchShoeButton;
-
+	private ArrayList<Shoe> catalogList;
 
 
 
@@ -115,15 +120,13 @@ public class Panels extends JPanel implements ActionListener{
 		logInButton = new JButton("Sign In");
 		logInButton.setFont(new Font("Air Americana", Font.PLAIN, 25));
 		logInButton.setBounds(604, 418, 212, 45);
-		ActionListener actionListenerLog = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(customer.readUserID(passwordField.getText(), emailField.getText()).equals("c")){
-					removeAll();
-					catalogPanel();
-					repaint();
-					revalidate();
-				}
+		ActionListener actionListenerLog = e -> {
+			customer.readCustomerData();
+			if (customer.signIn(passwordField.getText(), emailField.getText()).equals("c")) {
+				removeAll();
+				catalogPanel();
+				repaint();
+				revalidate();
 			}
 		};
 		logInButton.addActionListener(actionListenerLog);
@@ -305,11 +308,11 @@ public class Panels extends JPanel implements ActionListener{
 		yearField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(yearField);
 
-		CvvField = new JTextField();
-		CvvField.setBounds(756, 470, 113, 43);
-		CvvField.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		add(CvvField);
-		CvvField.setColumns(10);
+		cvvField = new JTextField();
+		cvvField.setBounds(756, 470, 113, 43);
+		cvvField.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		add(cvvField);
+		cvvField.setColumns(10);
 
 		sizes = new DefaultListModel<>();
 		sizes.addElement("38");
@@ -339,8 +342,13 @@ public class Panels extends JPanel implements ActionListener{
 		ActionListener actionListerConfirm = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				repaint();
-				revalidate();
+				if(!customer.signUp(emailField.getText(),nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())), new Address(streetField.getText(), cityField.getText(), postalCodeField.getText(), countryField.getText()), new Payment(cardField.getText(), nameField.getText(), Integer.parseInt(yearField.getText()), Integer.parseInt(monthField.getText()), cvvField.getText()), new Payout(accountNoField.getText(), nameField.getText()))){
+					removeAll();
+					setBackground(new Color(240,240,240));
+					loginPanel();
+					repaint();
+					revalidate();
+				}
 
 			}
 		};
@@ -518,11 +526,11 @@ public class Panels extends JPanel implements ActionListener{
 		yearField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(yearField);
 
-		CvvField = new JTextField();
-		CvvField.setBounds(808, 470, 113, 43);
-		CvvField.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		add(CvvField);
-		CvvField.setColumns(10);
+		cvvField = new JTextField();
+		cvvField.setBounds(808, 470, 113, 43);
+		cvvField.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		add(cvvField);
+		cvvField.setColumns(10);
 
 		sizes = new DefaultListModel<>();
 		sizes.addElement("38");
@@ -552,8 +560,9 @@ public class Panels extends JPanel implements ActionListener{
 		ActionListener actionListerConfirm = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				customer.editCustomer(nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())) ,confirmPasswordField.getText(), cardField.getText(), Integer.parseInt(monthField.getText()),Integer.parseInt(yearField.getText()),CvvField.getText(), streetField.getText(), cityField.getText() , postalCodeField.getText(), countryField.getText());
+				customer.editCustomer(nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())) ,confirmPasswordField.getText(), cardField.getText(), Integer.parseInt(monthField.getText()),Integer.parseInt(yearField.getText()), cvvField.getText(), streetField.getText(), cityField.getText() , postalCodeField.getText(), countryField.getText());
 				accountLabel.setText(customer.displayAccount());
+
 			}
 		};
 		confirmButton.addActionListener(actionListerConfirm);
@@ -582,14 +591,17 @@ public class Panels extends JPanel implements ActionListener{
 				case 0:
 					accountLabel.setVisible(true);
 					editAccountVisibility(false);
+
 					break;
 				case 1:
 					accountLabel.setVisible(false);
 					editAccountVisibility(false);
+
 					break;
 				case 2:
 					accountLabel.setVisible(false);
 					editAccountVisibility(false);
+
 					break;
 				case 3:
 					accountLabel.setVisible(false);
@@ -693,15 +705,16 @@ public class Panels extends JPanel implements ActionListener{
 		};
 		accountButton.addActionListener(actionListenerAccount);
 		add(accountButton);
-		catalog.readShoeList();
-		catalog.assign();
 
+		catalogList = catalog.returnCatalog();
 		shoes = new DefaultListModel<>();
-		for(int i = 0 ; i < catalog.aShoeList.size(); i++){
-
-			shoes.add(i, catalog.aShoeList.get(i));
-
+		if(catalogList.isEmpty()) {
+			catalog.readShoeList();
 		}
+		for (int i = 0; i < catalogList.size(); i++) {
+			shoes.add(i, catalogList.get(i));
+		}
+
 
 		shoeList=new JList<>(shoes);
 		shoeList.setFont(new Font("Air Americana", Font.PLAIN, 25));
@@ -826,12 +839,12 @@ public class Panels extends JPanel implements ActionListener{
 				shoeList.clearSelection();
 				shoes.removeAllElements();
 				if(shoeName.getText().equals("")){
-					catalog.aShoeList = catalog.searchShoe("all");
+					catalogList = catalog.searchShoe("all");
 				}else {
-					catalog.aShoeList = catalog.searchShoe(shoeName.getText());
+					catalogList = catalog.searchShoe(shoeName.getText());
 				}
-				for(int i = 0; i<catalog.aShoeList.size(); i++) {
-					shoes.add(i, catalog.aShoeList.get(i));
+				for(int i = 0; i< catalogList.size(); i++) {
+					shoes.add(i, catalogList.get(i));
 					repaint();
 					revalidate();
 				}
@@ -872,7 +885,7 @@ public class Panels extends JPanel implements ActionListener{
 		cardField.setVisible(status);
 		monthField.setVisible(status);
 		yearField.setVisible(status);
-		CvvField.setVisible(status);
+		cvvField.setVisible(status);
 		confirmButton.setVisible(status);
 		sizeList.setVisible(status);
 

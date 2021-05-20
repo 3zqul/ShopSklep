@@ -14,9 +14,15 @@ public class Editor extends User{
     Catalog catalog = new Catalog();
     List<String> nameList = new ArrayList<>();
 
+    public Editor(Integer userID, String password, String userEmail, String userType){
+        this.userID = userID;
+        this.password = password;
+        this.userEmail = userEmail;
+        this.userType = userType;
+    }
+
     public Editor(){}
 
-    @Override
     public String signIn(String userEmail, String password) {
         Float converter;
         try{

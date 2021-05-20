@@ -1,6 +1,5 @@
 package Shop.WorkerPackage;
 
-import Shop.CatalogForPanels;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -75,5 +74,9 @@ public class Catalog {
             }
         }
         return result;
+    }
+
+    public ArrayList<Shoe> returnCatalog(){
+        return shoeList;
     }
 }

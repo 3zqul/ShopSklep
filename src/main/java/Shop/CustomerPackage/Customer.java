@@ -1,8 +1,6 @@
 package Shop.CustomerPackage;
 
-import Shop.Panels;
 import Shop.User;
-import Shop.WorkerPackage.Shoe;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -22,7 +20,7 @@ public class Customer extends User {
     public Customer() {
     }
 
-    public Customer(int userID, String password, String userEmail, int userShoeSize, String userName, Payout userPayout, Payment userPayment, Address userAddress, List<Offer> offerList, List<Order> orderList) {
+    public Customer(String userType, int userID, String password, String userEmail, int userShoeSize, String userName, Payout userPayout, Payment userPayment, Address userAddress, List<Offer> offerList, List<Order> orderList) {
         this.userAddress = userAddress;
         this.userName = userName;
         this.offerList = offerList;
@@ -33,6 +31,7 @@ public class Customer extends User {
         this.userID = userID;
         this.password = password;
         this.userEmail = userEmail;
+        this.userType = userType;
     }
 
     public void displayOrders() {}
@@ -284,333 +283,26 @@ public class Customer extends User {
         return result;
     }
 
-    public String readUserID(String userEmail, String password) {
-        Float converter;
-        String result=null;
-
-        try {
-            Workbook workbook;
-            FileInputStream readFile = new FileInputStream(file);
-            workbook = new XSSFWorkbook(readFile);
-            Sheet sheet = workbook.getSheet("User");
-            Map<Integer, List<String>> map = new HashMap<>();
-            int i = 0;
-            for (Row row : sheet) {
-                map.put(i, new ArrayList<>());
-                for (Cell cell : row) {
-                    switch (cell.getCellType()) {
-                        case STRING:
-                            map.get(i).add(cell.getRichStringCellValue().getString());
-                            break;
-                        case NUMERIC:
-                            if (DateUtil.isCellDateFormatted(cell)) {
-                                map.get(i).add(cell.getDateCellValue() + "");
-                            } else {
-                                map.get(i).add(cell.getNumericCellValue() + "");
-                            }
-                            break;
-                        default:
-                            map.get(i).add(" ");
-                    }
-                }
-                i++;
-            }
-            for (int j = 1; j < map.size(); j++) {
-                if (map.get(j).get(2).equals(password) && map.get(j).get(1).equals(userEmail)) {
-                    result = "c";
-                    converter = new Float(map.get(j).get(0));
-                    userID = converter.intValue();
-                    this.password = password;
-                    this.userEmail = userEmail;
-                }else{
-                    result = "b";
-                }
-            }
-            try {
-                Workbook workbook2;
-                FileInputStream readFile2 = new FileInputStream(file);
-                workbook2 = new XSSFWorkbook(readFile2);
-                Sheet sheet2 = workbook2.getSheet("Customer");
-                Map<Integer, List<String>> map2 = new HashMap<>();
-                int count2 = 0;
-                for (Row row : sheet2) {
-                    map2.put(count2, new ArrayList<>());
-                    for (Cell cell : row) {
-                        switch (cell.getCellType()) {
-                            case STRING:
-                                map2.get(count2).add(cell.getRichStringCellValue().getString());
-                                break;
-                            case NUMERIC:
-                                if (DateUtil.isCellDateFormatted(cell)) {
-                                    map2.get(count2).add(cell.getDateCellValue() + "");
-                                } else {
-                                    map2.get(count2).add(cell.getNumericCellValue() + "");
-                                }
-                                break;
-                            default:
-                                map2.get(count2).add(" ");
-                        }
-                    }
-                    count2++;
-                }
-                for (int j = 1; j < map2.size() - 1; j++) {
-                    if (!map2.get(j).get(0).equals(String.valueOf(userID))) {
-                        userName = map2.get(j).get(1);
-                        converter = new Float(map2.get(j).get(2));
-                        userShoeSize = converter.intValue();
-                        break;
-                    }
-                }
-            } catch (IOException fileNotFoundException) {
-                fileNotFoundException.printStackTrace();
-            }
-
-            try {
-                Workbook workbook3;
-                FileInputStream readFile3 = new FileInputStream(file);
-                workbook3 = new XSSFWorkbook(readFile3);
-                Sheet sheet3 = workbook3.getSheet("Address");
-                Map<Integer, List<String>> map3 = new HashMap<>();
-                int count3 = 0;
-                for (Row row : sheet3) {
-                    map3.put(count3, new ArrayList<>());
-                    for (Cell cell : row) {
-                        switch (cell.getCellType()) {
-                            case STRING:
-                                map3.get(count3).add(cell.getRichStringCellValue().getString());
-                                break;
-                            case NUMERIC:
-                                if (DateUtil.isCellDateFormatted(cell)) {
-                                    map3.get(count3).add(cell.getDateCellValue() + "");
-                                } else {
-                                    map3.get(count3).add(cell.getNumericCellValue() + "");
-                                }
-                                break;
-                            default:
-                                map3.get(count3).add(" ");
-                        }
-                    }
-                    count3++;
-                }
-                for (int j = 1; j < map3.size(); j++) {
-                    if (!map3.get(j).get(0).equals(String.valueOf(userID))) {
-                        userAddress = new Address(map3.get(j).get(1), map3.get(j).get(2), map3.get(j).get(3), map3.get(j).get(4));
-                        break;
-                    }
-                }
-            } catch (IOException | NullPointerException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                Workbook workbook4;
-                FileInputStream readFile4 = new FileInputStream(file);
-                workbook4 = new XSSFWorkbook(readFile4);
-                Sheet sheet4 = workbook4.getSheet("Payment");
-                Map<Integer, List<String>> map4 = new HashMap<>();
-                int count4 = 0;
-                for (Row row : sheet4) {
-                    map4.put(count4, new ArrayList<>());
-                    for (Cell cell : row) {
-                        switch (cell.getCellType()) {
-                            case STRING:
-                                map4.get(count4).add(cell.getRichStringCellValue().getString());
-                                break;
-                            case NUMERIC:
-                                if (DateUtil.isCellDateFormatted(cell)) {
-                                    map4.get(count4).add(cell.getDateCellValue() + "");
-                                } else {
-                                    map4.get(count4).add(cell.getNumericCellValue() + "");
-                                }
-                                break;
-                            default:
-                                map4.get(count4).add(" ");
-                        }
-                    }
-                    count4++;
-                }
-                for (int j = 1; j < map4.size(); j++) {
-                    if (!map4.get(j).get(0).equals(String.valueOf(userID))) {
-                        Float converter1 = new Float(map4.get(j).get(3));
-                        Float converter2 = new Float(map4.get(j).get(4));
-                        userPayment = new Payment(map4.get(j).get(1), map4.get(j).get(2), converter1.intValue(), converter2.intValue(), map4.get(j).get(5));
-                        break;
-                    }
-                }
-            } catch (IOException | NullPointerException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                Workbook workbook5;
-                FileInputStream readFile5 = new FileInputStream(file);
-                workbook5 = new XSSFWorkbook(readFile5);
-                Sheet sheet5 = workbook5.getSheet("Payout");
-                Map<Integer, List<String>> map5 = new HashMap<>();
-                int count5 = 0;
-                for (Row row : sheet5) {
-                    map5.put(count5, new ArrayList<>());
-                    for (Cell cell : row) {
-                        switch (cell.getCellType()) {
-                            case STRING:
-                                map5.get(count5).add(cell.getRichStringCellValue().getString());
-                                break;
-                            case NUMERIC:
-                                if (DateUtil.isCellDateFormatted(cell)) {
-                                    map5.get(count5).add(cell.getDateCellValue() + "");
-                                } else {
-                                    map5.get(count5).add(cell.getNumericCellValue() + "");
-                                }
-                                break;
-                            default:
-                                map5.get(count5).add(" ");
-                        }
-                    }
-                    count5++;
-                }
-                for (int j = 1; j < map5.size(); j++) {
-                    if (!map5.get(j).get(0).equals(String.valueOf(userID))) {
-                        userPayout = new Payout(map5.get(j).get(1), map5.get(j).get(2));
-                        break;
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                Workbook workbook6;
-                FileInputStream readFile6 = new FileInputStream(file);
-                workbook6 = new XSSFWorkbook(readFile6);
-                Sheet sheet6 = workbook6.getSheet("Offer");
-                Map<Integer, List<String>> map6 = new HashMap<>();
-                int count6 = 0;
-                for (Row row : sheet6) {
-                    map6.put(count6, new ArrayList<>());
-                    for (Cell cell : row) {
-                        switch (cell.getCellType()) {
-                            case STRING:
-                                map6.get(count6).add(cell.getRichStringCellValue().getString());
-                                break;
-                            case NUMERIC:
-                                if (DateUtil.isCellDateFormatted(cell)) {
-                                    map6.get(count6).add(cell.getDateCellValue() + "");
-                                } else {
-                                    map6.get(count6).add(cell.getNumericCellValue() + "");
-                                }
-                                break;
-                            default:
-                                map6.get(count6).add(" ");
-                        }
-                    }
-                    count6++;
-                }
-                offerList = new ArrayList<>();
-                for (int j = 1; j < map6.size(); j++) {
-                    if (!map6.get(j).get(0).equals(String.valueOf(userID))) {
-                        Offer offer = new Offer();
-                        converter = new Float(map6.get(j).get(1));
-                        offer.offerID = converter.intValue();
-                        converter = new Float(map6.get(j).get(2));
-                        offer.offerID = converter.intValue();
-                        offer.shoeSize = map6.get(j).get(3);
-                        converter = new Float(map6.get(j).get(4));
-                        offer.offerPrice = converter;
-                        offer.offerType = map6.get(j).get(5);
-                        offerList.add(offer);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Workbook workbook7;
-            FileInputStream readFile7 = new FileInputStream(file);
-            workbook7 = new XSSFWorkbook(readFile7);
-            Sheet sheet7 = workbook7.getSheet("Order");
-            Map<Integer, List<String>> map7 = new HashMap<>();
-            int count7 = 0;
-            for (Row row : sheet7) {
-                map7.put(count7, new ArrayList<>());
-                for (Cell cell : row) {
-                    switch (cell.getCellType()) {
-                        case STRING:
-                            map7.get(count7).add(cell.getRichStringCellValue().getString());
-                            break;
-                        case NUMERIC:
-                            if (DateUtil.isCellDateFormatted(cell)) {
-                                map7.get(count7).add(cell.getDateCellValue() + "");
-                            } else {
-                                map7.get(count7).add(cell.getNumericCellValue() + "");
-                            }
-                            break;
-                        default:
-                            map7.get(count7).add(" ");
-                    }
-                }
-                count7++;
-            }
-            Workbook workbook8;
-            FileInputStream readFile8 = new FileInputStream(file);
-            workbook8 = new XSSFWorkbook(readFile8);
-            Sheet sheet8 = workbook8.getSheet("ShoeDetails");
-            Map<Integer, List<String>> map8 = new HashMap<>();
-            int count8 = 0;
-            for (Row row2 : sheet8) {
-                map8.put(count8, new ArrayList<>());
-                for (Cell cell : row2) {
-                    switch (cell.getCellType()) {
-                        case STRING:
-                            map8.get(count8).add(cell.getRichStringCellValue().getString());
-                            break;
-                        case NUMERIC:
-                            if (DateUtil.isCellDateFormatted(cell)) {
-                                map8.get(count8).add(cell.getDateCellValue() + "");
-                            } else {
-                                map8.get(count8).add(cell.getNumericCellValue() + "");
-                            }
-                            break;
-                        default:
-                            map8.get(count8).add(" ");
-                    }
-                }
-                count8++;
-            }
-            orderList = new ArrayList<>();
-            for (int k = 1; k < map8.size(); k++) {
-                if (!map8.get(k).get(0).equals(String.valueOf(userID))) {
-                    ShoeDetails shoeDetails = new ShoeDetails();
-                    converter = new Float(map8.get(k).get(1));
-                    shoeDetails.orderID = converter.intValue();
-                    shoeDetails.shoeName = map8.get(k).get(2);
-                    converter = new Float(map8.get(k).get(3));
-                    shoeDetails.shoePrice = converter;
-                    shoeDetails.shoeSize = map8.get(k).get(4);
-                    for (int j = 1; j < map7.size(); j++) {
-                        if (!map7.get(j).get(0).equals(String.valueOf(userID)) && !map7.get(j).get(1).equals(String.valueOf(shoeDetails.orderID))) {
-                            Order order = new Order();
-                            converter = new Float(map7.get(j).get(0));
-                            order.orderID = converter.intValue();
-                            order.orderDate = map7.get(j).get(1);
-                            converter = new Float(map7.get(j).get(2));
-                            order.sellerID = converter.intValue();
-                            order.customerID = this.userID;
-                            order.shoeDetails = shoeDetails;
-                            orderList.add(order);
-                            break;
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
     @Override
     public String signIn(String userEmail, String password) {
-        return readUserID(userEmail, password);
+        readCustomerData();
+        for(int i=1; i<customerMap.size()+1; i++) {
+            if (customerMap.get(1).userEmail.equals(userEmail) && customerMap.get(1).password.equals(password)) {
+                this.userAddress = customerMap.get(1).userAddress;
+                this.userName = customerMap.get(1).userName;
+                this.offerList = customerMap.get(1).offerList;
+                this.orderList = customerMap.get(1).orderList;
+                this.userPayment = customerMap.get(1).userPayment;
+                this.userPayout = customerMap.get(1).userPayout;
+                this.userShoeSize = customerMap.get(1).userShoeSize;
+                this.userID = customerMap.get(1).userID;
+                this.password = customerMap.get(1).password;
+                this.userEmail = customerMap.get(1).userEmail;
+                this.userType = customerMap.get(1).userType;
+                return customerMap.get(i).userType;
+            }
+        }
+        return "blad";
     }
 }
 
