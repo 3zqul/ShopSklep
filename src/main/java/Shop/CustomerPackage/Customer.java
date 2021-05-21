@@ -64,48 +64,26 @@ public class Customer extends User {
 
     public boolean signUp(String userEmail, String userName, String password, int userShoeSize, Address address, Payment payment, Payout payout) {
         boolean result = false;
+        int index = 0;
 
         try {
-            Workbook workbook;
-            FileInputStream inputFile = new FileInputStream(file);
-            workbook = new XSSFWorkbook(inputFile);
-            Sheet userSheet = workbook.getSheet("User");
-            Map<Integer, List<String>> userMap = new HashMap<>();
-            int i = 0;
-            for (Row userRow : userSheet) {
-                userMap.put(i, new ArrayList<>());
-                for (Cell userCell : userRow) {
-                    switch (userCell.getCellType()) {
-                        case STRING:
-                            userMap.get(i).add(userCell.getRichStringCellValue().getString());
-                            break;
-                        case NUMERIC:
-                            if (DateUtil.isCellDateFormatted(userCell)) {
-                                userMap.get(i).add(userCell.getDateCellValue() + "");
-                            } else {
-                                userMap.get(i).add(userCell.getNumericCellValue() + "");
-                            }
-                            break;
-                        default:
-                            userMap.get(i).add(" ");
-                            break;
-                    }
-                }
-                i++;
-            }
-            for (int j = 0; j < userMap.size(); ++j) {
-                if (userEmail.equals(userMap.get(j).get(1))) {
+            for (int j = 0; j < customerMap.size(); ++j) {
+                if (userEmail.equals(customerMap.get(j).userEmail)) {
                     result = true;
+                    index = j;
                     break;
                 }
             }
+            FileInputStream inputFile1 = new FileInputStream(file);
+            Workbook workbook = new XSSFWorkbook(inputFile1);
+            Sheet userSheet = workbook.getSheet("User");
             ArrayList<String> userDataList = new ArrayList<>();
-            userDataList.add(Integer.toString(i));
+            userDataList.add(Integer.toString(index));
             userDataList.add(userEmail);
             userDataList.add(password);
             userDataList.add("c");
             Map<Integer, ArrayList<String>> userData = new HashMap<>();
-            userData.put(i, userDataList);
+            userData.put(index, userDataList);
             Set<Integer> newUserRows = userData.keySet();
             int userrownum = userSheet.getLastRowNum();
             for (Integer key : newUserRows) {
@@ -136,11 +114,11 @@ public class Customer extends User {
             workbook2 = new XSSFWorkbook(inputFile2);
             Sheet customerSheet = workbook2.getSheet("Customer");
             ArrayList<String> customerDataList = new ArrayList<>();
-            customerDataList.add(Integer.toString(i));
+            customerDataList.add(Integer.toString(index));
             customerDataList.add(userName);
             customerDataList.add(Integer.toString(userShoeSize));
             Map<Integer, ArrayList<String>> customerData = new HashMap<>();
-            customerData.put(i, customerDataList);
+            customerData.put(index, customerDataList);
             Set<Integer> newCustomerRows = customerData.keySet();
             int customerrownum = customerSheet.getLastRowNum();
             for (Integer key : newCustomerRows) {
@@ -171,13 +149,13 @@ public class Customer extends User {
             workbook3 = new XSSFWorkbook(inputFile3);
             Sheet addressSheet = workbook3.getSheet("Address");
             ArrayList<String> addressDataList = new ArrayList<>();
-            addressDataList.add(String.valueOf(i));
+            addressDataList.add(String.valueOf(index));
             addressDataList.add(address.street);
             addressDataList.add(address.city);
             addressDataList.add(address.postalCode);
             addressDataList.add(address.country);
             Map<Integer, ArrayList<String>> addressData = new HashMap<>();
-            addressData.put(i, addressDataList);
+            addressData.put(index, addressDataList);
             Set<Integer> newAddressRows = addressData.keySet();
             int addressrownum = addressSheet.getLastRowNum();
             for (Integer key : newAddressRows) {
@@ -209,14 +187,14 @@ public class Customer extends User {
 
             Sheet paymentSheet = workbook4.getSheet("Payment");
             ArrayList<String> paymentDataList = new ArrayList<>();
-            paymentDataList.add(String.valueOf(i));
+            paymentDataList.add(String.valueOf(index));
             paymentDataList.add(payment.cardNo);
             paymentDataList.add(payment.cardName);
             paymentDataList.add(String.valueOf(payment.cardExpiryYear));
             paymentDataList.add(String.valueOf(payment.cardExpiryMonth));
             paymentDataList.add(payment.cardCVV);
             Map<Integer, ArrayList<String>> paymentData = new HashMap<>();
-            paymentData.put(i, paymentDataList);
+            paymentData.put(index, paymentDataList);
             Set<Integer> newPaymentRows = paymentData.keySet();
             int paymentnewrows = paymentSheet.getLastRowNum();
             for (Integer key : newPaymentRows) {
@@ -248,11 +226,11 @@ public class Customer extends User {
 
             Sheet payoutSheet = workbook5.getSheet("Payout");
             ArrayList<String> payoutDataList = new ArrayList<>();
-            payoutDataList.add(String.valueOf(i));
+            payoutDataList.add(String.valueOf(index));
             payoutDataList.add(payout.accountNo);
             payoutDataList.add(payout.accountName);
             Map<Integer, ArrayList<String>> payoutData = new HashMap<>();
-            payoutData.put(i, payoutDataList);
+            payoutData.put(index, payoutDataList);
             Set<Integer> newPayoutRows = payoutData.keySet();
             int payoutnewrows = payoutSheet.getLastRowNum();
             for (Integer key : newPayoutRows) {
