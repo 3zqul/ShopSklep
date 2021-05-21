@@ -4,18 +4,19 @@ import Shop.User;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
 public class Customer extends User {
 
-    protected int userShoeSize;
-    protected String userName;
-    protected Payout userPayout;
-    protected Payment userPayment;
-    protected Address userAddress;
-    protected List<Offer> offerList;
-    protected List<Order> orderList;
+    int userShoeSize;
+    String userName;
+    Payout userPayout;
+    Payment userPayment;
+    Address userAddress;
+    List<Offer> offerList;
+    List<Order> orderList;
 
     public Customer() {
     }
@@ -43,24 +44,23 @@ public class Customer extends User {
         return "<html>Name: " + this.userName + "<br/> E- mail: " + this.userEmail + "<br/>Payment: " + userPayment.toString() + "<br/>Payout:  " + userPayout.toString() + "<br/> Adress: " + userAddress.toString() + "</html>";
     }
 
-    public void editCustomer(String name, String password, int size, String confirmPass, String cardNo, int month, int year, String cvv, String street, String city, String postalCode, String country) {
+    public void editCustomer(String password, int userShoeSize, String confirmPassword, Payment payment, Address address) {
 
-        this.userShoeSize = size;
-        this.userName=name;
+        this.userShoeSize = userShoeSize;
+        this.userName=userName;
 
-        if (password.equals(confirmPass) && password != null) {
+        if (password.equals(confirmPassword) && password != null) {
             this.password = password;
         }
-        if (cardNo.length() == 16 && month < 13 && year < 99 && cvv.length() == 3) {
-            this.userPayment = new Payment(cardNo, userName, month, year, cvv);
+        if (payment.cardNo.length() == 16 && payment.cardExpiryMonth < 13 && payment.cardExpiryYear < 99 && payment.cardCVV.length() == 3) {
+            this.userPayment = new Payment(payment.cardNo, this.userName, payment.cardExpiryMonth, payment.cardExpiryYear, payment.cardCVV);
         }
-        if (street != null && city != null && postalCode != null && country != null) {
-            this.userAddress = new Address(street, city, postalCode, country);
+        if (address.street != null && address.city != null && address.postalCode != null && address.country != null) {
+            this.userAddress = new Address(address.street, address.city, address.postalCode, address.country);
         }
         System.out.println(userAddress.toString());
         System.out.println(userPayment.toString());
     }
-
 
     public boolean signUp(String userEmail, String userName, String password, int userShoeSize, Address address, Payment payment, Payout payout) {
         boolean result = false;
@@ -261,26 +261,32 @@ public class Customer extends User {
         return result;
     }
 
+    public List<Offer> returnOffers() {
+        return offerList;
+    }
+
+    public List<Order> returnOrders() {
+        return orderList;
+    }
+
     @Override
     public String signIn(String userEmail, String password) {
-        readCustomerData();
-        for(int i=1; i<customerMap.size()+1; i++) {
-            if (customerMap.get(1).userEmail.equals(userEmail) && customerMap.get(1).password.equals(password)) {
-                this.userAddress = customerMap.get(1).userAddress;
-                this.userName = customerMap.get(1).userName;
-                this.offerList = customerMap.get(1).offerList;
-                this.orderList = customerMap.get(1).orderList;
-                this.userPayment = customerMap.get(1).userPayment;
-                this.userPayout = customerMap.get(1).userPayout;
-                this.userShoeSize = customerMap.get(1).userShoeSize;
-                this.userID = customerMap.get(1).userID;
-                this.password = customerMap.get(1).password;
-                this.userEmail = customerMap.get(1).userEmail;
-                this.userType = customerMap.get(1).userType;
+        for(int i=1; i<customerMap.size()+2; i++) {
+            if (customerMap.get(i).userEmail.equals(userEmail) && customerMap.get(i).password.equals(password)) {
+                this.userAddress = customerMap.get(i).userAddress;
+                this.userName = customerMap.get(i).userName;
+                this.offerList = customerMap.get(i).offerList;
+                this.orderList = customerMap.get(i).orderList;
+                this.userPayment = customerMap.get(i).userPayment;
+                this.userPayout = customerMap.get(i).userPayout;
+                this.userShoeSize = customerMap.get(i).userShoeSize;
+                this.userID = customerMap.get(i).userID;
+                this.password = customerMap.get(i).password;
+                this.userEmail = customerMap.get(i).userEmail;
+                this.userType = customerMap.get(i).userType;
                 return customerMap.get(i).userType;
             }
         }
         return "blad";
     }
 }
-

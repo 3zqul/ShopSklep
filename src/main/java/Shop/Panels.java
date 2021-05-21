@@ -1,9 +1,6 @@
 package Shop;
 
-import Shop.CustomerPackage.Address;
-import Shop.CustomerPackage.Customer;
-import Shop.CustomerPackage.Payment;
-import Shop.CustomerPackage.Payout;
+import Shop.CustomerPackage.*;
 import Shop.WorkerPackage.Catalog;
 import Shop.WorkerPackage.Shoe;
 
@@ -16,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.event.ListSelectionEvent;
@@ -46,7 +44,6 @@ public class Panels extends JPanel implements ActionListener{
 	private Catalog catalog= new Catalog();
 	private JList<String> list;
 	private DefaultListModel<String> model;
-	private JLabel backgroundLabel;
 	private JLabel cardLabel;
 	private JLabel accountNoLabel;
 	private JLabel streetLabel;
@@ -78,15 +75,14 @@ public class Panels extends JPanel implements ActionListener{
 	private JTextField shoeName;
 	private JButton searchShoeButton;
 	private ArrayList<Shoe> catalogList;
+	private DefaultListModel<Offer> offerModel;
+	private JList<Offer> offerList;
+	private DefaultListModel<Order> orderModel;
+	private JList<Order> orderList;
 
-
-
-	ImageIcon background = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\background.png");
 	ImageIcon logo250 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
 	ImageIcon logo150 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo150.png");
 	ImageIcon logo100 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo100.png");
-
-
 
 	public Panels(JFrame frame){
 		this.frame= frame;
@@ -387,8 +383,6 @@ public class Panels extends JPanel implements ActionListener{
 		logoLabel.setIcon(logo100);
 		add(logoLabel);
 
-
-
 		accountLabel = new JLabel(customer.displayAccount());
 		accountLabel.setBounds(177, 131, 1000, 220);
 		accountLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
@@ -560,7 +554,7 @@ public class Panels extends JPanel implements ActionListener{
 		ActionListener actionListerConfirm = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				customer.editCustomer(nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())) ,confirmPasswordField.getText(), cardField.getText(), Integer.parseInt(monthField.getText()),Integer.parseInt(yearField.getText()), cvvField.getText(), streetField.getText(), cityField.getText() , postalCodeField.getText(), countryField.getText());
+				customer.editCustomer(passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())), confirmPasswordField.getText(), new Payment(cardField.getText(), nameField.getText(), Integer.parseInt(monthField.getText()),Integer.parseInt(yearField.getText()), cvvField.getText()), new Address(streetField.getText(), cityField.getText() , postalCodeField.getText(), countryField.getText()));
 				accountLabel.setText(customer.displayAccount());
 
 			}
@@ -577,6 +571,52 @@ public class Panels extends JPanel implements ActionListener{
 		model.addElement("Edit Account");
 
 
+
+		offerModel = new DefaultListModel<>();
+		List<Offer> customerOffers;
+
+		customerOffers = customer.returnOffers();
+
+		for(int i = 0; i< customerOffers.size(); i++){
+
+
+			offerModel.add(i, customerOffers.get(i));
+
+		}
+
+
+
+		offerList = new JList<>(offerModel);
+		JScrollPane offerPanel = new JScrollPane(offerList);
+		offerPanel.setBounds(136, 122, 1040, 515);
+		offerPanel.setBackground(Color.WHITE);
+		offerPanel.setBorder(null);
+		offerPanel.setVisible(false);
+		add(offerPanel);
+
+		orderModel = new DefaultListModel<>();
+		List<Order> customerOrders;
+
+		customerOrders = customer.returnOrders();
+
+		for(int i = 0; i < customerOrders.size(); i++){
+			orderModel.add(i, customerOrders.get(i));
+		}
+
+		orderList = new JList<>(orderModel);
+		JScrollPane orderPanel = new JScrollPane(orderList);
+		orderPanel.setBounds(136, 122, 1040, 515);
+		orderPanel.setBackground(Color.WHITE);
+		orderPanel.setBorder(null);
+		orderPanel.setVisible(false);
+		add(orderPanel);
+
+		JPanel panel = new JPanel();
+		panel.setBounds(136, 122, 1040, 515);
+		panel.setBackground(Color.WHITE);
+		panel.setBorder(null);
+		add(panel);
+
 		list = new JList<>(model);
 		list.setValueIsAdjusting(true);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -591,19 +631,26 @@ public class Panels extends JPanel implements ActionListener{
 				case 0:
 					accountLabel.setVisible(true);
 					editAccountVisibility(false);
-
+					offerPanel.setVisible(false);
+					orderPanel.setVisible(false);
 					break;
 				case 1:
+					orderPanel.setVisible(false);
+					offerPanel.setVisible(true);
 					accountLabel.setVisible(false);
 					editAccountVisibility(false);
 
 					break;
 				case 2:
+					orderPanel.setVisible(true);
+					offerPanel.setVisible(false);
 					accountLabel.setVisible(false);
 					editAccountVisibility(false);
 
 					break;
 				case 3:
+					orderPanel.setVisible(false);
+					offerPanel.setVisible(false);
 					accountLabel.setVisible(false);
 					editAccountVisibility(true);
 
@@ -622,10 +669,6 @@ public class Panels extends JPanel implements ActionListener{
 
 		add(list);
 
-		backgroundLabel = new JLabel();
-		backgroundLabel.setBounds(136, 122, 1040, 515);
-		backgroundLabel.setIcon(background);
-		add(backgroundLabel);
 
 		catalogButton = new JButton("CATALOG");
 		catalogButton.setFont(new Font("Air Americana", Font.PLAIN, 40));
@@ -755,12 +798,14 @@ public class Panels extends JPanel implements ActionListener{
 
 		splitPane = new JSplitPane();
 		splitPane.setEnabled(false);
+		splitPane.setBorder(null);
 		splitPane.setDividerLocation(300);
 
 		JScrollPane scrollPane= new JScrollPane(shoeList);
 		scrollPane.getVerticalScrollBar().setBackground(Color.WHITE);
 		scrollPane.getVerticalScrollBar().setOpaque(true);
 		scrollPane.getVerticalScrollBar().setBorder(null);
+		scrollPane.setBorder(null);
 		splitPane.setBounds(7, 122, 1169, 515);
 		splitPane.setLeftComponent(scrollPane);
 		add(splitPane);

@@ -8,7 +8,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +22,7 @@ public abstract class User {
     protected String userType;
     protected Map<Integer, Customer> customerMap = new HashMap<>();
     protected Map<Integer, Editor> editorMap = new HashMap<>();
-    protected Map<Integer, Administrator> administratorMap;
+    protected Map<Integer, Administrator> administratorMap = new HashMap<>();
     final protected File file = new File("D:\\Shop\\src\\main\\java\\Shop\\DataBase.xlsx");
 
     abstract public String signIn(String userEmail, String password);
@@ -33,6 +32,12 @@ public abstract class User {
         List<Float> converter2;
         List<Float> converter3;
         List<Float> converter4;
+        Float convert = null;
+        Float convert2 = null;
+        Float convert3 = null;
+        Float convert4 = null;
+        Float convert5 = null;
+        Float convert6 = null;
         ShoeDetails shoeDetails = null;
         try {
             Workbook workbook;
@@ -73,12 +78,16 @@ public abstract class User {
                     switch (cell.getCellType()) {
                         case STRING:
                             map2.get(count2).add(cell.getRichStringCellValue().getString());
-                            break; case NUMERIC: if (DateUtil.isCellDateFormatted(cell)) {
-                            map2.get(count2).add(String.valueOf(cell.getDateCellValue()));
-                        } else {
-                            map2.get(count2).add(String.valueOf(cell.getNumericCellValue()));
-                        }
-                            break; default: map2.get(count2).add(" ");
+                            break;
+                        case NUMERIC:
+                            if (DateUtil.isCellDateFormatted(cell)) {
+                                map2.get(count2).add(cell.getDateCellValue() + "");
+                            } else {
+                                map2.get(count2).add(cell.getNumericCellValue() + "");
+                            }
+                            break;
+                        default:
+                            map2.get(count2).add(" ");
                     }
                 }
                 count2++;
@@ -239,7 +248,7 @@ public abstract class User {
                 }
                 count8++;
             }
-            for(int j=1; j<map.size(); j++) {
+            for(int j = 0; j < map.size(); j++) {
                 if (map.get(j).get(3).equals("c")) {
                     converter1 = new ArrayList<>();
                     converter1.add(new Float(map.get(j).get(0)));
@@ -249,24 +258,31 @@ public abstract class User {
                     converter1.add(new Float(map4.get(j).get(5)));
                     List<Offer> offerList = new ArrayList<>();
                     for (int k = 1; k < map6.size(); k++) {
-                        if (map6.get(k).get(0).equals(map.get(j).get(0))) {
+                        convert = new Float(map6.get(k).get(0));
+                        if (converter1.get(0).intValue()==convert.intValue()) {
                             converter2 = new ArrayList<>();
                             converter2.add(new Float(map6.get(k).get(1)));
                             converter2.add(new Float(map6.get(k).get(2)));
+                            converter2.add(new Float(map6.get(k).get(3)));
                             converter2.add(new Float(map6.get(k).get(4)));
-                            offerList.add(new Offer(converter2.get(0).intValue(), converter2.get(1).intValue(), map6.get(k).get(3), converter2.get(2), map6.get(k).get(5)));
+                            offerList.add(new Offer(converter2.get(0).intValue(), converter2.get(1).intValue(), converter2.get(2).intValue(), converter2.get(3), map6.get(k).get(5)));
                         }
                     }
                     List<Order> orderList = new ArrayList<>();
                     for (int k = 1; k < map8.size(); k++) {
-                        if (map8.get(k).get(1).equals(map7.get(k).get(0))) {
+                        convert2 = new Float(map7.get(k).get(0));
+                        convert3 = new Float(map8.get(k).get(1));
+                        if (convert2.intValue()==(convert3.intValue())) {
                             converter3 = new ArrayList<>();
                             converter3.add(new Float(map8.get(k).get(2)));
                             converter3.add(new Float(map8.get(k).get(5)));
                             converter3.add(new Float(map8.get(k).get(1)));
                             shoeDetails = new ShoeDetails(converter3.get(0).intValue(), map8.get(k).get(3), map8.get(k).get(5), converter3.get(1), converter3.get(2).intValue());
-                            for (int l = 0; l < map7.size(); l++) {
-                                if (map7.get(l).get(2).equals(map.get(j).get(0))) {
+                            for (int l = 1; l < map7.size(); l++) {
+                                convert4 = new Float(map7.get(l).get(0));
+                                convert5 = new Float(map8.get(k).get(1));
+                                convert6 = new Float(map7.get(l).get(2));
+                                if ((convert4.intValue()==convert5.intValue()) && (convert6.intValue()==converter1.get(0).intValue())) {
                                     converter4 = new ArrayList<>();
                                     converter4.add(new Float(map7.get(k).get(0)));
                                     converter4.add(new Float(map7.get(k).get(2)));
@@ -277,6 +293,8 @@ public abstract class User {
                         }
                     }
                     customerMap.put(j, new Customer(map.get(j).get(3), converter1.get(0).intValue(), map.get(j).get(1), map.get(j).get(2), converter1.get(1).intValue(), map2.get(j).get(1), new Payout(map5.get(j).get(1), map5.get(j).get(2)), new Payment(map4.get(j).get(1), map4.get(j).get(2), converter1.get(2).intValue(), converter1.get(3).intValue(), String.valueOf(converter1.get(4).intValue())), new Address(map3.get(j).get(1), map3.get(j).get(2), map3.get(j).get(3), map3.get(j).get(4)), offerList, orderList));
+                }else{
+                    continue;
                 }
             }
         } catch (IOException e) {
@@ -358,7 +376,7 @@ public abstract class User {
                 if (map.get(j).get(3).equals("a")) {
                     Float converter;
                     converter = new Float(map.get(j).get(0));
-                    editorMap.put(j, new Editor(converter.intValue(), map.get(j).get(1), map.get(j).get(2), map.get(j).get(3)));
+                    administratorMap.put(j, new Administrator(converter.intValue(), map.get(j).get(1), map.get(j).get(2), map.get(j).get(3)));
                 }
             }
         } catch (IOException e) {
