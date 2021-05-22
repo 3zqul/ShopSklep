@@ -26,12 +26,27 @@ public class Shoe {
         return shoeName + " " + shoeSize;
     }
 
-    public Float buyNowPrice(){
+    public Float returnShoeBuyPrice(){
 
         return this.shoeBuyPrice;
     }
-    public Float quickSellPrice(){
+    public Float returnShoeSellPrice(){
 
         return this.shoeSellPrice;
     }
+
+    public int returnShoeID(){
+        return shoeID;
+    }
+
+    public String returnShoeName(){
+
+        return shoeName;
+    }
+
+    public int returnShoeSize(){
+
+        return shoeSize;
+    }
+
 }

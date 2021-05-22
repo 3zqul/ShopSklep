@@ -14,20 +14,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class User {
+public abstract class User{
 
     protected Integer userID;
     protected String password;
     protected String userEmail;
     protected String userType;
-    protected Map<Integer, Customer> customerMap = new HashMap<>();
-    protected Map<Integer, Editor> editorMap = new HashMap<>();
-    protected Map<Integer, Administrator> administratorMap = new HashMap<>();
+    protected Map<Integer, UserForMap> userMap;
+    protected Map<Integer, Customer> customerMap;
+    protected Map<Integer, Editor> editorMap;
+    protected Map<Integer, Administrator> administratorMap;
+    protected Map<Integer, Offer> offerMap;
     final protected File file = new File("D:\\Shop\\src\\main\\java\\Shop\\DataBase.xlsx");
 
     abstract public String signIn(String userEmail, String password);
 
     public void readCustomerData(){
+
+        customerMap = new HashMap<>();
+
         List<Float> converter1;
         List<Float> converter2;
         List<Float> converter3;
@@ -265,7 +270,7 @@ public abstract class User {
                             converter2.add(new Float(map6.get(k).get(2)));
                             converter2.add(new Float(map6.get(k).get(3)));
                             converter2.add(new Float(map6.get(k).get(4)));
-                            offerList.add(new Offer(converter2.get(0).intValue(), converter2.get(1).intValue(), converter2.get(2).intValue(), converter2.get(3), map6.get(k).get(5)));
+                            offerList.add(new Offer(converter2.get(0).intValue(), converter2.get(1).intValue(), converter2.get(2).intValue(), converter2.get(3), map6.get(k).get(5), map6.get(k).get(6)));
                         }
                     }
                     List<Order> orderList = new ArrayList<>();
@@ -304,6 +309,8 @@ public abstract class User {
 
     public void readEditorData(){
 
+        editorMap = new HashMap<>();
+
         try {
             Workbook workbook;
             FileInputStream readFile = new FileInputStream(file);
@@ -331,7 +338,7 @@ public abstract class User {
                 }
                 i++;
             }
-            for(int j=0; j< map.size(); j++){
+            for(int j=1; j< map.size(); j++){
                 if (map.get(j).get(3).equals("e")) {
                     Float converter;
                     converter = new Float(map.get(j).get(0));
@@ -345,6 +352,8 @@ public abstract class User {
 
     public void readAdministratorData(){
 
+        administratorMap = new HashMap<>();
+
         try {
             Workbook workbook;
             FileInputStream readFile = new FileInputStream(file);
@@ -372,7 +381,7 @@ public abstract class User {
                 }
                 i++;
             }
-            for(int j=0; j< map.size(); j++){
+            for(int j=1; j< map.size(); j++){
                 if (map.get(j).get(3).equals("a")) {
                     Float converter;
                     converter = new Float(map.get(j).get(0));
@@ -382,5 +391,92 @@ public abstract class User {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void readUserData(){
+
+        userMap = new HashMap<>();
+
+        try {
+            Workbook workbook;
+            FileInputStream readFile = new FileInputStream(file);
+            workbook = new XSSFWorkbook(readFile);
+            Sheet sheet = workbook.getSheet("User");
+            Map<Integer, List<String>> map = new HashMap<>();
+            int i = 0;
+            for (Row row : sheet) {
+                map.put(i, new ArrayList<>());
+                for (Cell cell : row) {
+                    switch (cell.getCellType()) {
+                        case STRING:
+                            map.get(i).add(cell.getRichStringCellValue().getString());
+                            break;
+                        case NUMERIC:
+                            if (DateUtil.isCellDateFormatted(cell)) {
+                                map.get(i).add(String.valueOf(cell.getDateCellValue()));
+                            } else {
+                                map.get(i).add(String.valueOf(cell.getNumericCellValue()));
+                            }
+                            break;
+                        default:
+                            map.get(i).add(" ");
+                    }
+                }
+                i++;
+            }
+            for(int j=1; j< map.size(); j++){
+                Float converter;
+                converter = new Float(map.get(j).get(0));
+                userMap.put(j, new UserForMap(converter.intValue(), map.get(j).get(1), map.get(j).get(2), map.get(j).get(3)));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Map<Integer, Offer> readOfferData(){
+
+        offerMap = new HashMap<>();
+
+        try {
+            Workbook workbook;
+            FileInputStream readFile = new FileInputStream(file);
+            workbook = new XSSFWorkbook(readFile);
+            Sheet sheet = workbook.getSheet("Offer");
+            Map<Integer, List<String>> map = new HashMap<>();
+            int i = 0;
+            for (Row row : sheet) {
+                map.put(i, new ArrayList<>());
+                for (Cell cell : row) {
+                    switch (cell.getCellType()) {
+                        case STRING:
+                            map.get(i).add(cell.getRichStringCellValue().getString());
+                            break;
+                        case NUMERIC:
+                            if (DateUtil.isCellDateFormatted(cell)) {
+                                map.get(i).add(String.valueOf(cell.getDateCellValue()));
+                            } else {
+                                map.get(i).add(String.valueOf(cell.getNumericCellValue()));
+                            }
+                            break;
+                        default:
+                            map.get(i).add(" ");
+                    }
+                }
+                i++;
+            }
+            List<Float> converter;
+            for(int j=1; j< map.size(); j++){
+                converter = new ArrayList<>();
+                converter.add(new Float(map.get(j).get(1)));
+                converter.add(new Float(map.get(j).get(2)));
+                converter.add(new Float(map.get(j).get(3)));
+                converter.add(new Float(map.get(j).get(4)));
+                offerMap.put(j, new Offer(converter.get(0).intValue(), converter.get(1).intValue(), converter.get(2).intValue(), converter.get(3), map.get(j).get(5), map.get(j).get(6)));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return offerMap;
     }
 }

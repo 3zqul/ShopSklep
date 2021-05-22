@@ -79,10 +79,13 @@ public class Panels extends JPanel implements ActionListener{
 	private JList<Offer> offerList;
 	private DefaultListModel<Order> orderModel;
 	private JList<Order> orderList;
+	private JButton deleteButton;
 
 	ImageIcon logo250 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
 	ImageIcon logo150 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo150.png");
 	ImageIcon logo100 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo100.png");
+
+
 
 	public Panels(JFrame frame){
 		this.frame= frame;
@@ -171,12 +174,15 @@ public class Panels extends JPanel implements ActionListener{
 		logoLabel.setIcon(logo100);
 		add(logoLabel);
 
-
-
 		nameLabel = new JLabel("Name:");
 		nameLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
 		nameLabel.setBounds(114, 146, 180, 43);
 		add(nameLabel);
+
+		emailLabel = new JLabel("Email: ");
+		emailLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		emailLabel.setBounds(638, 146, 448, 43);
+		add(emailLabel);
 
 		cardLabel = new JLabel("Card number:");
 		cardLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
@@ -243,6 +249,12 @@ public class Panels extends JPanel implements ActionListener{
 		nameField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(nameField);
 		nameField.setColumns(10);
+
+		emailField = new JTextField();
+		emailField.setFont(new Font("Tahoma", Font.PLAIN, 43));
+		emailField.setColumns(10);
+		emailField.setBounds(756, 146, 303, 43);
+		add(emailField);
 
 		passwordField = new JPasswordField();
 		passwordField.setColumns(10);
@@ -335,10 +347,10 @@ public class Panels extends JPanel implements ActionListener{
 		registerButton.setFocusPainted(false);
 		registerButton.setBackground(SystemColor.control);
 		registerButton.setBounds(834, 543, 205, 69);
-		ActionListener actionListerConfirm = new ActionListener() {
+		ActionListener actionListerRegister = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!customer.signUp(emailField.getText(),nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())), new Address(streetField.getText(), cityField.getText(), postalCodeField.getText(), countryField.getText()), new Payment(cardField.getText(), nameField.getText(), Integer.parseInt(yearField.getText()), Integer.parseInt(monthField.getText()), cvvField.getText()), new Payout(accountNoField.getText(), nameField.getText()))){
+				if(customer.signUp(emailField.getText(), nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())), new Address(streetField.getText(), cityField.getText(), postalCodeField.getText(), countryField.getText()), new Payment(cardField.getText(), nameField.getText(), Integer.parseInt(yearField.getText()), Integer.parseInt(monthField.getText()), cvvField.getText()), new Payout(accountNoField.getText(), nameField.getText()))){
 					removeAll();
 					setBackground(new Color(240,240,240));
 					loginPanel();
@@ -348,7 +360,7 @@ public class Panels extends JPanel implements ActionListener{
 
 			}
 		};
-		registerButton.addActionListener(actionListerConfirm);
+		registerButton.addActionListener(actionListerRegister);
 		add(registerButton);
 
 
@@ -384,7 +396,9 @@ public class Panels extends JPanel implements ActionListener{
 		add(logoLabel);
 
 		accountLabel = new JLabel(customer.displayAccount());
-		accountLabel.setBounds(177, 131, 1000, 220);
+		accountLabel.setVerticalTextPosition(SwingConstants.TOP);
+		accountLabel.setVerticalAlignment(SwingConstants.TOP);
+		accountLabel.setBounds(177, 131, 1000, 500);
 		accountLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
 		add(accountLabel);
 
@@ -555,8 +569,6 @@ public class Panels extends JPanel implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				customer.editCustomer(passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())), confirmPasswordField.getText(), new Payment(cardField.getText(), nameField.getText(), Integer.parseInt(monthField.getText()),Integer.parseInt(yearField.getText()), cvvField.getText()), new Address(streetField.getText(), cityField.getText() , postalCodeField.getText(), countryField.getText()));
-				accountLabel.setText(customer.displayAccount());
-
 			}
 		};
 		confirmButton.addActionListener(actionListerConfirm);
@@ -570,7 +582,14 @@ public class Panels extends JPanel implements ActionListener{
 		model.addElement("Orders");
 		model.addElement("Edit Account");
 
-
+		deleteButton = new JButton("delete");
+		deleteButton.setOpaque(true);
+		deleteButton.setFont(new Font("Air Americana", Font.PLAIN, 30));
+		deleteButton.setFocusPainted(false);
+		deleteButton.setBackground(SystemColor.control);
+		deleteButton.setBounds(896, 543, 245, 69);
+		deleteButton.setVisible(false);
+		add(deleteButton);
 
 		offerModel = new DefaultListModel<>();
 		List<Offer> customerOffers;
@@ -587,29 +606,45 @@ public class Panels extends JPanel implements ActionListener{
 
 
 		offerList = new JList<>(offerModel);
+		offerList.setFont(new Font("Air Americana", Font.PLAIN, 25));
+		offerList.setFixedCellHeight(50);
+
 		JScrollPane offerPanel = new JScrollPane(offerList);
-		offerPanel.setBounds(136, 122, 1040, 515);
+		offerPanel.setBounds(136, 122, 1040, 400);
 		offerPanel.setBackground(Color.WHITE);
 		offerPanel.setBorder(null);
 		offerPanel.setVisible(false);
 		add(offerPanel);
+
+
+
+
 
 		orderModel = new DefaultListModel<>();
 		List<Order> customerOrders;
 
 		customerOrders = customer.returnOrders();
 
-		for(int i = 0; i < customerOrders.size(); i++){
+		for(int i = 0; i< customerOrders.size(); i++){
+
+
 			orderModel.add(i, customerOrders.get(i));
+
 		}
 
 		orderList = new JList<>(orderModel);
+		orderList.setFont(new Font("Air Americana", Font.PLAIN, 25));
+		orderList.setFixedCellHeight(50);
+
 		JScrollPane orderPanel = new JScrollPane(orderList);
 		orderPanel.setBounds(136, 122, 1040, 515);
 		orderPanel.setBackground(Color.WHITE);
 		orderPanel.setBorder(null);
 		orderPanel.setVisible(false);
 		add(orderPanel);
+
+
+
 
 		JPanel panel = new JPanel();
 		panel.setBounds(136, 122, 1040, 515);
@@ -633,27 +668,28 @@ public class Panels extends JPanel implements ActionListener{
 					editAccountVisibility(false);
 					offerPanel.setVisible(false);
 					orderPanel.setVisible(false);
+					deleteButton.setVisible(false);
 					break;
 				case 1:
 					orderPanel.setVisible(false);
 					offerPanel.setVisible(true);
 					accountLabel.setVisible(false);
 					editAccountVisibility(false);
-
+					deleteButton.setVisible(true);
 					break;
 				case 2:
 					orderPanel.setVisible(true);
 					offerPanel.setVisible(false);
 					accountLabel.setVisible(false);
 					editAccountVisibility(false);
-
+					deleteButton.setVisible(false);
 					break;
 				case 3:
 					orderPanel.setVisible(false);
 					offerPanel.setVisible(false);
 					accountLabel.setVisible(false);
 					editAccountVisibility(true);
-
+					deleteButton.setVisible(false);
 					break;
 
 			}
@@ -701,14 +737,8 @@ public class Panels extends JPanel implements ActionListener{
 
 		add(accountButton);
 
-
-
 		catalogButton.setBackground(Color.WHITE);
 		accountButton.setBackground(Color.LIGHT_GRAY);
-
-
-
-
 	}
 
 	public void catalogPanel(){
@@ -743,7 +773,6 @@ public class Panels extends JPanel implements ActionListener{
 				accountPanel();
 				repaint();
 				revalidate();
-
 			}
 		};
 		accountButton.addActionListener(actionListenerAccount);
@@ -752,7 +781,7 @@ public class Panels extends JPanel implements ActionListener{
 		catalogList = catalog.returnCatalog();
 		shoes = new DefaultListModel<>();
 		if(catalogList.isEmpty()) {
-			catalog.readShoeList();
+			catalog.readShoeList(customer.readOfferData());
 		}
 		for (int i = 0; i < catalogList.size(); i++) {
 			shoes.add(i, catalogList.get(i));
@@ -766,15 +795,15 @@ public class Panels extends JPanel implements ActionListener{
 			if(shoeList.getSelectedIndex()!=-1) {
 				Shoe shoe = shoeList.getSelectedValue();
 				shoeLabel.setText(shoe.toString());
-				if (Float.toString(shoe.buyNowPrice()).equals("0.0")) {
+				if (Float.toString(shoe.returnShoeBuyPrice()).equals("0.0")) {
 					buyNowButton.setText("no offers yet");
 				} else {
-					buyNowButton.setText("buy now: " + Float.toString(shoe.buyNowPrice()) + "pln");
+					buyNowButton.setText("buy now: " + Float.toString(shoe.returnShoeBuyPrice()) + "pln");
 				}
-				if (Float.toString(shoe.quickSellPrice()).equals("0.0")) {
+				if (Float.toString(shoe.returnShoeSellPrice()).equals("0.0")) {
 					quickSellButton.setText("no asks yet");
 				} else {
-					quickSellButton.setText("quick sell: " + Float.toString(shoe.quickSellPrice()) + "pln");
+					quickSellButton.setText("quick sell: " + Float.toString(shoe.returnShoeSellPrice()) + "pln");
 				}
 
 				shoeLabel.setVisible(true);
