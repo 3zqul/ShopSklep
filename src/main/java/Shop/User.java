@@ -3,6 +3,8 @@ package Shop;
 import Shop.CustomerPackage.*;
 import Shop.WorkerPackage.Administrator;
 import Shop.WorkerPackage.Editor;
+import Shop.WorkerPackage.Statistics;
+import org.apache.commons.math3.analysis.function.Add;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -22,9 +24,8 @@ public abstract class User{
     protected String userType;
     protected Map<Integer, UserForMap> userMap;
     protected Map<Integer, Customer> customerMap;
-    protected Map<Integer, Editor> editorMap;
-    protected Map<Integer, Administrator> administratorMap;
-    protected Map<Integer, Offer> offerMap;
+
+    protected Map<Integer, Statistics> statisticsMap;
     final protected File file = new File("D:\\Shop\\src\\main\\java\\Shop\\DataBase.xlsx");
 
     abstract public String signIn(String userEmail, String password);
@@ -41,9 +42,8 @@ public abstract class User{
         Float convert2 = null;
         Float convert3 = null;
         Float convert4 = null;
-        Float convert5 = null;
-        Float convert6 = null;
         ShoeDetails shoeDetails = null;
+        Address orderAddress = null;
         try {
             Workbook workbook;
             FileInputStream readFile = new FileInputStream(file);
@@ -253,139 +253,86 @@ public abstract class User{
                 }
                 count8++;
             }
-            for(int j = 0; j < map.size(); j++) {
+            Workbook workbook9;
+            FileInputStream readFile9 = new FileInputStream(file);
+            workbook9 = new XSSFWorkbook(readFile9);
+            Sheet sheet9 = workbook9.getSheet("OrderAddress");
+            Map<Integer, List<String>> map9 = new HashMap<>();
+            int count9 = 0;
+            for (Row row2 : sheet9) {
+                map9.put(count9, new ArrayList<>());
+                for (Cell cell : row2) {
+                    switch (cell.getCellType()) {
+                        case STRING:
+                            map9.get(count9).add(cell.getRichStringCellValue().getString());
+                            break;
+                        case NUMERIC:
+                            if (DateUtil.isCellDateFormatted(cell)) {
+                                map9.get(count9).add(cell.getDateCellValue() + "");
+                            } else {
+                                map9.get(count9).add(cell.getNumericCellValue() + "");
+                            }
+                            break;
+                        default:
+                            map9.get(count9).add(" ");
+                    }
+                }
+                count9++;
+            }
+            float conv;
+            int index=1;
+            for(int j = 1; j < map.size(); j++) {
                 if (map.get(j).get(3).equals("c")) {
                     converter1 = new ArrayList<>();
                     converter1.add(new Float(map.get(j).get(0)));
-                    converter1.add(new Float(map2.get(j).get(2)));
-                    converter1.add(new Float(map4.get(j).get(3)));
-                    converter1.add(new Float(map4.get(j).get(4)));
-                    converter1.add(new Float(map4.get(j).get(5)));
                     List<Offer> offerList = new ArrayList<>();
-                    for (int k = 1; k < map6.size(); k++) {
-                        convert = new Float(map6.get(k).get(0));
-                        if (converter1.get(0).intValue()==convert.intValue()) {
-                            converter2 = new ArrayList<>();
-                            converter2.add(new Float(map6.get(k).get(1)));
-                            converter2.add(new Float(map6.get(k).get(2)));
-                            converter2.add(new Float(map6.get(k).get(3)));
-                            converter2.add(new Float(map6.get(k).get(4)));
-                            offerList.add(new Offer(converter2.get(0).intValue(), converter2.get(1).intValue(), converter2.get(2).intValue(), converter2.get(3), map6.get(k).get(5), map6.get(k).get(6)));
-                        }
-                    }
                     List<Order> orderList = new ArrayList<>();
-                    for (int k = 1; k < map8.size(); k++) {
-                        convert2 = new Float(map7.get(k).get(0));
-                        convert3 = new Float(map8.get(k).get(1));
-                        if (convert2.intValue()==(convert3.intValue())) {
-                            converter3 = new ArrayList<>();
-                            converter3.add(new Float(map8.get(k).get(2)));
-                            converter3.add(new Float(map8.get(k).get(5)));
-                            converter3.add(new Float(map8.get(k).get(1)));
-                            shoeDetails = new ShoeDetails(converter3.get(0).intValue(), map8.get(k).get(3), map8.get(k).get(5), converter3.get(1), converter3.get(2).intValue());
-                            for (int l = 1; l < map7.size(); l++) {
-                                convert4 = new Float(map7.get(l).get(0));
-                                convert5 = new Float(map8.get(k).get(1));
-                                convert6 = new Float(map7.get(l).get(2));
-                                if ((convert4.intValue()==convert5.intValue()) && (convert6.intValue()==converter1.get(0).intValue())) {
-                                    converter4 = new ArrayList<>();
-                                    converter4.add(new Float(map7.get(k).get(0)));
-                                    converter4.add(new Float(map7.get(k).get(2)));
-                                    converter4.add(new Float(map7.get(k).get(3)));
-                                    orderList.add(new Order(converter4.get(0).intValue(), map7.get(k).get(1), converter4.get(1).intValue(), converter4.get(2).intValue(), shoeDetails));
+                    for(int k = 1; k < map2.size(); k++) {
+                        conv = new Float(map2.get(k).get(0));
+                        if((int) conv == converter1.get(0).intValue()) {
+                            converter1.add(new Float(map2.get(k).get(2)));
+                            converter1.add(new Float(map4.get(k).get(3)));
+                            converter1.add(new Float(map4.get(k).get(4)));
+                            converter1.add(new Float(map4.get(k).get(5)));
+                            for (int l = 1; l < map6.size(); l++) {
+                                convert = new Float(map6.get(l).get(0));
+                                if (converter1.get(0).intValue() == convert.intValue()) {
+                                    converter2 = new ArrayList<>();
+                                    converter2.add(new Float(map6.get(l).get(1)));
+                                    converter2.add(new Float(map6.get(l).get(2)));
+                                    converter2.add(new Float(map6.get(l).get(3)));
+                                    converter2.add(new Float(map6.get(l).get(4)));
+                                    offerList.add(new Offer(converter2.get(0).intValue(), converter2.get(1).intValue(), converter2.get(2).intValue(), converter2.get(3), map6.get(l).get(5), map6.get(l).get(6)));
                                 }
                             }
+                            for (int l = 1; l < map8.size(); l++) {
+                                convert2 = new Float(map8.get(l).get(0));
+                                convert3 = new Float(map9.get(l).get(0));
+                                if ((convert2.intValue() == (int) conv) && (convert3.intValue() == (int) conv)) {
+                                    converter3 = new ArrayList<>();
+                                    converter3.add(new Float(map8.get(l).get(2)));
+                                    converter3.add(new Float(map8.get(l).get(4)));
+                                    converter3.add(new Float(map8.get(l).get(1)));
+                                    shoeDetails = new ShoeDetails(converter3.get(0).intValue(), map8.get(l).get(3), map8.get(l).get(5), converter3.get(1), converter3.get(2).intValue());
+                                    orderAddress = new Address(map9.get(l).get(2), map9.get(l).get(3), map9.get(l).get(4), map9.get(l).get(5));
+                                    for (int m = 1; m < map7.size(); m++) {
+                                        convert4 = new Float(map7.get(m).get(2));
+                                        if (convert4.intValue() == (int) conv) {
+                                            converter4 = new ArrayList<>();
+                                            converter4.add(new Float(map7.get(m).get(0)));
+                                            converter4.add(new Float(map7.get(m).get(2)));
+                                            converter4.add(new Float(map7.get(m).get(3)));
+                                            if(converter4.get(0).intValue() == converter3.get(2)) {
+                                                orderList.add(new Order(converter4.get(0).intValue(), map7.get(m).get(1), converter4.get(1).intValue(), converter4.get(2).intValue(), shoeDetails, orderAddress));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            customerMap.put(index, new Customer(map.get(j).get(3), converter1.get(0).intValue(), map.get(j).get(1), map.get(j).get(2), converter1.get(1).intValue(), map2.get(k).get(1), new Payout(map5.get(k).get(1), map5.get(k).get(2)), new Payment(map4.get(k).get(1), map4.get(k).get(2), converter1.get(2).intValue(), converter1.get(3).intValue(), String.valueOf(converter1.get(4).intValue())), new Address(map3.get(k).get(1), map3.get(k).get(2), map3.get(k).get(3), map3.get(k).get(4)), offerList, orderList));
                         }
                     }
-                    customerMap.put(j, new Customer(map.get(j).get(3), converter1.get(0).intValue(), map.get(j).get(1), map.get(j).get(2), converter1.get(1).intValue(), map2.get(j).get(1), new Payout(map5.get(j).get(1), map5.get(j).get(2)), new Payment(map4.get(j).get(1), map4.get(j).get(2), converter1.get(2).intValue(), converter1.get(3).intValue(), String.valueOf(converter1.get(4).intValue())), new Address(map3.get(j).get(1), map3.get(j).get(2), map3.get(j).get(3), map3.get(j).get(4)), offerList, orderList));
-                }else{
-                    continue;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void readEditorData(){
-
-        editorMap = new HashMap<>();
-
-        try {
-            Workbook workbook;
-            FileInputStream readFile = new FileInputStream(file);
-            workbook = new XSSFWorkbook(readFile);
-            Sheet sheet = workbook.getSheet("User");
-            Map<Integer, List<String>> map = new HashMap<>();
-            int i = 0;
-            for (Row row : sheet) {
-                map.put(i, new ArrayList<>());
-                for (Cell cell : row) {
-                    switch (cell.getCellType()) {
-                        case STRING:
-                            map.get(i).add(cell.getRichStringCellValue().getString());
-                            break;
-                        case NUMERIC:
-                            if (DateUtil.isCellDateFormatted(cell)) {
-                                map.get(i).add(String.valueOf(cell.getDateCellValue()));
-                            } else {
-                                map.get(i).add(String.valueOf(cell.getNumericCellValue()));
-                            }
-                            break;
-                        default:
-                            map.get(i).add(" ");
-                    }
-                }
-                i++;
-            }
-            for(int j=1; j< map.size(); j++){
-                if (map.get(j).get(3).equals("e")) {
-                    Float converter;
-                    converter = new Float(map.get(j).get(0));
-                    editorMap.put(j, new Editor(converter.intValue(), map.get(j).get(1), map.get(j).get(2), map.get(j).get(3)));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void readAdministratorData(){
-
-        administratorMap = new HashMap<>();
-
-        try {
-            Workbook workbook;
-            FileInputStream readFile = new FileInputStream(file);
-            workbook = new XSSFWorkbook(readFile);
-            Sheet sheet = workbook.getSheet("User");
-            Map<Integer, List<String>> map = new HashMap<>();
-            int i = 0;
-            for (Row row : sheet) {
-                map.put(i, new ArrayList<>());
-                for (Cell cell : row) {
-                    switch (cell.getCellType()) {
-                        case STRING:
-                            map.get(i).add(cell.getRichStringCellValue().getString());
-                            break;
-                        case NUMERIC:
-                            if (DateUtil.isCellDateFormatted(cell)) {
-                                map.get(i).add(String.valueOf(cell.getDateCellValue()));
-                            } else {
-                                map.get(i).add(String.valueOf(cell.getNumericCellValue()));
-                            }
-                            break;
-                        default:
-                            map.get(i).add(" ");
-                    }
-                }
-                i++;
-            }
-            for(int j=1; j< map.size(); j++){
-                if (map.get(j).get(3).equals("a")) {
-                    Float converter;
-                    converter = new Float(map.get(j).get(0));
-                    administratorMap.put(j, new Administrator(converter.intValue(), map.get(j).get(1), map.get(j).get(2), map.get(j).get(3)));
+                    index++;
                 }
             }
         } catch (IOException e) {
@@ -434,49 +381,7 @@ public abstract class User{
         }
     }
 
-    public Map<Integer, Offer> readOfferData(){
-
-        offerMap = new HashMap<>();
-
-        try {
-            Workbook workbook;
-            FileInputStream readFile = new FileInputStream(file);
-            workbook = new XSSFWorkbook(readFile);
-            Sheet sheet = workbook.getSheet("Offer");
-            Map<Integer, List<String>> map = new HashMap<>();
-            int i = 0;
-            for (Row row : sheet) {
-                map.put(i, new ArrayList<>());
-                for (Cell cell : row) {
-                    switch (cell.getCellType()) {
-                        case STRING:
-                            map.get(i).add(cell.getRichStringCellValue().getString());
-                            break;
-                        case NUMERIC:
-                            if (DateUtil.isCellDateFormatted(cell)) {
-                                map.get(i).add(String.valueOf(cell.getDateCellValue()));
-                            } else {
-                                map.get(i).add(String.valueOf(cell.getNumericCellValue()));
-                            }
-                            break;
-                        default:
-                            map.get(i).add(" ");
-                    }
-                }
-                i++;
-            }
-            List<Float> converter;
-            for(int j=1; j< map.size(); j++){
-                converter = new ArrayList<>();
-                converter.add(new Float(map.get(j).get(1)));
-                converter.add(new Float(map.get(j).get(2)));
-                converter.add(new Float(map.get(j).get(3)));
-                converter.add(new Float(map.get(j).get(4)));
-                offerMap.put(j, new Offer(converter.get(0).intValue(), converter.get(1).intValue(), converter.get(2).intValue(), converter.get(3), map.get(j).get(5), map.get(j).get(6)));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return offerMap;
+    public int returnCustomerMapSize(){
+        return customerMap.size();
     }
 }

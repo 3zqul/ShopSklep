@@ -1,8 +1,7 @@
 package Shop;
 
 import Shop.CustomerPackage.*;
-import Shop.WorkerPackage.Catalog;
-import Shop.WorkerPackage.Shoe;
+import Shop.WorkerPackage.*;
 
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -41,6 +40,8 @@ public class Panels extends JPanel implements ActionListener{
 	private DefaultListModel<String> sizes;
 	private DefaultListModel<Shoe> shoes;
 	private Customer customer = new Customer();
+	private Editor editor = new Editor();
+	private Administrator admin = new Administrator();
 	private Catalog catalog= new Catalog();
 	private JList<String> list;
 	private DefaultListModel<String> model;
@@ -72,7 +73,7 @@ public class Panels extends JPanel implements ActionListener{
 	private JButton quickSellButton;
 	private JButton bidButton;
 	private JButton askButton;
-	private JTextField shoeName;
+	private JTextField shoeNameField;
 	private JButton searchShoeButton;
 	private ArrayList<Shoe> catalogList;
 	private DefaultListModel<Offer> offerModel;
@@ -80,16 +81,30 @@ public class Panels extends JPanel implements ActionListener{
 	private DefaultListModel<Order> orderModel;
 	private JList<Order> orderList;
 	private JButton deleteButton;
+	private JButton editOrderButton;
+	private JButton editCatalogButton;
+	private JButton customerOffersButton;
+	private JButton statisticsButton;
+	private JLabel shoeNameLabel;
+	private JButton deleteShoeButton;
+	private JButton addShoeButton;
+	private JTextField shoeName;
+	private JList<Customer> customerList;
+	private DefaultListModel<Customer> customerModel;
+	private JLabel offersLabel;
+	private JLabel ordersLabel;
+	private JButton saveButton;
+	private String loggedUser;
+	private Statistics statistics = new Statistics();
 
 	ImageIcon logo250 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
-	ImageIcon logo150 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo150.png");
+	ImageIcon logo350 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo350.png");
 	ImageIcon logo100 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo100.png");
-
-
 
 	public Panels(JFrame frame){
 		this.frame= frame;
 		loginPanel();
+		statistics.updateMostPopularShoe();
 	}
 
 	public void loginPanel(){
@@ -97,10 +112,11 @@ public class Panels extends JPanel implements ActionListener{
 
 		passwordField = new JPasswordField();
 		passwordField.setBounds(368, 366, 448, 45);
+		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(passwordField);
 
 		emailField = new JTextField();
-		emailField.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		emailField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		emailField.setToolTipText("");
 		emailField.setBounds(368, 285, 448, 45);
 		add(emailField);
@@ -120,10 +136,22 @@ public class Panels extends JPanel implements ActionListener{
 		logInButton.setFont(new Font("Air Americana", Font.PLAIN, 25));
 		logInButton.setBounds(604, 418, 212, 45);
 		ActionListener actionListenerLog = e -> {
-			customer.readCustomerData();
 			if (customer.signIn(passwordField.getText(), emailField.getText()).equals("c")) {
+				loggedUser = "c";
 				removeAll();
 				catalogPanel();
+				repaint();
+				revalidate();
+			} else if (editor.signIn(passwordField.getText(), emailField.getText()).equals("e")) {
+				loggedUser = "e";
+				removeAll();
+				editorMenu();
+				repaint();
+				revalidate();
+			} else if (admin.signIn(passwordField.getText(), emailField.getText()).equals("a")) {
+				loggedUser = "a";
+				removeAll();
+				adminMenu();
 				repaint();
 				revalidate();
 			}
@@ -160,8 +188,6 @@ public class Panels extends JPanel implements ActionListener{
 		logoLabel.setIcon(logo250);
 		add(logoLabel);
 	}
-
-
 
 	public void registerPanel(){
 
@@ -251,10 +277,10 @@ public class Panels extends JPanel implements ActionListener{
 		nameField.setColumns(10);
 
 		emailField = new JTextField();
-		emailField.setFont(new Font("Tahoma", Font.PLAIN, 43));
-		emailField.setColumns(10);
+		emailField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		emailField.setBounds(756, 146, 303, 43);
 		add(emailField);
+		emailField.setColumns(10);
 
 		passwordField = new JPasswordField();
 		passwordField.setColumns(10);
@@ -398,7 +424,7 @@ public class Panels extends JPanel implements ActionListener{
 		accountLabel = new JLabel(customer.displayAccount());
 		accountLabel.setVerticalTextPosition(SwingConstants.TOP);
 		accountLabel.setVerticalAlignment(SwingConstants.TOP);
-		accountLabel.setBounds(177, 131, 1000, 500);
+		accountLabel.setBounds(177, 141, 1000, 500);
 		accountLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
 		add(accountLabel);
 
@@ -597,16 +623,11 @@ public class Panels extends JPanel implements ActionListener{
 		customerOffers = customer.returnOffers();
 
 		for(int i = 0; i< customerOffers.size(); i++){
-
-
 			offerModel.add(i, customerOffers.get(i));
-
 		}
 
-
-
 		offerList = new JList<>(offerModel);
-		offerList.setFont(new Font("Air Americana", Font.PLAIN, 25));
+		offerList.setFont(new Font("Air Americana", Font.PLAIN, 30));
 		offerList.setFixedCellHeight(50);
 
 		JScrollPane offerPanel = new JScrollPane(offerList);
@@ -616,10 +637,6 @@ public class Panels extends JPanel implements ActionListener{
 		offerPanel.setVisible(false);
 		add(offerPanel);
 
-
-
-
-
 		orderModel = new DefaultListModel<>();
 		List<Order> customerOrders;
 
@@ -627,13 +644,11 @@ public class Panels extends JPanel implements ActionListener{
 
 		for(int i = 0; i< customerOrders.size(); i++){
 
-
 			orderModel.add(i, customerOrders.get(i));
-
 		}
 
 		orderList = new JList<>(orderModel);
-		orderList.setFont(new Font("Air Americana", Font.PLAIN, 25));
+		orderList.setFont(new Font("Air Americana", Font.PLAIN, 30));
 		orderList.setFixedCellHeight(50);
 
 		JScrollPane orderPanel = new JScrollPane(orderList);
@@ -642,9 +657,6 @@ public class Panels extends JPanel implements ActionListener{
 		orderPanel.setBorder(null);
 		orderPanel.setVisible(false);
 		add(orderPanel);
-
-
-
 
 		JPanel panel = new JPanel();
 		panel.setBounds(136, 122, 1040, 515);
@@ -691,20 +703,15 @@ public class Panels extends JPanel implements ActionListener{
 					editAccountVisibility(true);
 					deleteButton.setVisible(false);
 					break;
-
 			}
-
 		});
 
 		list.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-
 			}
 		});
-
 		add(list);
-
 
 		catalogButton = new JButton("CATALOG");
 		catalogButton.setFont(new Font("Air Americana", Font.PLAIN, 40));
@@ -720,11 +727,9 @@ public class Panels extends JPanel implements ActionListener{
 				catalogPanel();
 				repaint();
 				revalidate();
-
 			}
 		};
 		catalogButton.addActionListener(actionListenerCatalog);
-
 		add(catalogButton);
 
 		accountButton =new JButton("ACCOUNT");
@@ -734,7 +739,6 @@ public class Panels extends JPanel implements ActionListener{
 		accountButton.setOpaque(true);
 		accountButton.setBorder(null);
 		accountButton.setFocusPainted(false);
-
 		add(accountButton);
 
 		catalogButton.setBackground(Color.WHITE);
@@ -781,12 +785,12 @@ public class Panels extends JPanel implements ActionListener{
 		catalogList = catalog.returnCatalog();
 		shoes = new DefaultListModel<>();
 		if(catalogList.isEmpty()) {
-			catalog.readShoeList(customer.readOfferData());
+			admin.readOfferData();
+			catalog.readShoeList(admin.returnOfferMap());
 		}
 		for (int i = 0; i < catalogList.size(); i++) {
 			shoes.add(i, catalogList.get(i));
 		}
-
 
 		shoeList=new JList<>(shoes);
 		shoeList.setFont(new Font("Air Americana", Font.PLAIN, 25));
@@ -926,9 +930,6 @@ public class Panels extends JPanel implements ActionListener{
 		};
 		searchShoeButton.addActionListener(actionListenerSearch);
 		panel.add(searchShoeButton);
-
-
-
 	}
 
 	public void editAccountVisibility(boolean status){
@@ -962,9 +963,424 @@ public class Panels extends JPanel implements ActionListener{
 		cvvField.setVisible(status);
 		confirmButton.setVisible(status);
 		sizeList.setVisible(status);
-
 	}
 
+	public void adminMenu(){
+		setLayout(null);
+
+		logoLabel = new JLabel("");
+		logoLabel.setBounds(121, 145, 350, 350);
+		logoLabel.setIcon(logo350);
+		add(logoLabel);
+
+		editOrderButton = new JButton("edit orders");
+		editOrderButton.setBounds(585, 119, 458, 92);
+		editOrderButton.setOpaque(true);
+		editOrderButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		editOrderButton.setFocusPainted(false);
+		editOrderButton.setBackground(Color.WHITE);
+		add(editOrderButton);
+
+		editCatalogButton = new JButton("edit catalog");
+		editCatalogButton.setBounds(585, 222, 458, 92);
+		editCatalogButton.setOpaque(true);
+		editCatalogButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		editCatalogButton.setFocusPainted(false);
+		editCatalogButton.setBackground(Color.WHITE);
+		ActionListener actionListenerCatalog = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeAll();
+				editCatalogPanel();
+				repaint();
+				revalidate();
+			}
+		};
+		editCatalogButton.addActionListener(actionListenerCatalog);
+		add(editCatalogButton);
+
+		customerOffersButton = new JButton("customer offers");
+		customerOffersButton.setBounds(585, 325, 458, 92);
+		customerOffersButton.setOpaque(true);
+		customerOffersButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		customerOffersButton.setFocusPainted(false);
+		customerOffersButton.setBackground(Color.WHITE);
+		ActionListener actionListenerOffers = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeAll();
+				seeCustomersPanel();
+				repaint();
+				revalidate();
+			}
+		};
+		customerOffersButton.addActionListener(actionListenerOffers);
+		add(customerOffersButton);
+
+		statisticsButton = new JButton("statistics");
+		statisticsButton.setBounds(585, 428, 458, 92);
+		statisticsButton.setOpaque(true);
+		statisticsButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		statisticsButton.setFocusPainted(false);
+		statisticsButton.setBackground(Color.WHITE);
+		add(statisticsButton);
+	}
+
+	public void editorMenu(){
+		setLayout(null);
+
+		logoLabel = new JLabel("");
+		logoLabel.setBounds(121, 145, 350, 350);
+		logoLabel.setIcon(logo350);
+		add(logoLabel);
+
+		editOrderButton = new JButton("edit orders");
+		editOrderButton.setBounds(585, 222, 458, 92);
+		editOrderButton.setOpaque(true);
+		editOrderButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		editOrderButton.setFocusPainted(false);
+		editOrderButton.setBackground(Color.WHITE);
+		ActionListener actionListenerOrder = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeAll();
+				editOrderPanel();
+				repaint();
+				revalidate();
+			}
+		};
+		editOrderButton.addActionListener(actionListenerOrder);
+		add(editOrderButton);
+
+		editCatalogButton = new JButton("edit catalog");
+		editCatalogButton.setBounds(585, 325, 458, 92);
+		editCatalogButton.setOpaque(true);
+		editCatalogButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		editCatalogButton.setFocusPainted(false);
+		editCatalogButton.setBackground(Color.WHITE);
+		ActionListener actionListenerCatalog = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeAll();
+				editCatalogPanel();
+				repaint();
+				revalidate();
+			}
+		};
+		editCatalogButton.addActionListener(actionListenerCatalog);
+		add(editCatalogButton);
+	}
+
+	public void editCatalogPanel(){
+		setLayout(null);
+		admin.readOfferData();
+
+		catalogList = catalog.returnCatalog();
+		shoes = new DefaultListModel<>();
+		if(catalogList.isEmpty()) {
+			catalog.readShoeList(admin.returnOfferMap());
+		}
+		for (int i = 0; i < catalogList.size(); i++) {
+			shoes.add(i, catalogList.get(i));
+		}
+		shoeList=new JList<>(shoes);
+		shoeList.setFont(new Font("Air Americana", Font.PLAIN, 25));
+		shoeList.setFixedCellHeight(40);
+
+		JScrollPane scrollPane= new JScrollPane(shoeList);
+		scrollPane.getVerticalScrollBar().setBackground(Color.WHITE);
+		scrollPane.getVerticalScrollBar().setOpaque(true);
+		scrollPane.getVerticalScrollBar().setBorder(null);
+		scrollPane.setBorder(null);
+		scrollPane.setBounds(7, 1, 300, 635);
+		add(scrollPane);
+
+		deleteShoeButton = new JButton("remove shoe");
+		deleteShoeButton.setBounds(317, 544, 265, 85);
+		deleteShoeButton.setOpaque(true);
+		deleteShoeButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		deleteShoeButton.setFocusPainted(false);
+		deleteShoeButton.setBackground(Color.WHITE);
+		add(deleteShoeButton);
+
+		backButton = new JButton("back");
+		backButton.setBounds(912, 544, 265, 85);
+		backButton.setOpaque(true);
+		backButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		backButton.setFocusPainted(false);
+		backButton.setBackground(Color.WHITE);
+		ActionListener actionListenerBack = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(loggedUser.equals("e")) {
+					removeAll();
+					editorMenu();
+					repaint();
+					revalidate();
+				}else{
+					removeAll();
+					adminMenu();
+					repaint();
+					revalidate();
+				}
+			}
+		};
+		backButton.addActionListener(actionListenerBack);
+		add(backButton);
+
+		shoeNameLabel = new JLabel("New shoe name:");
+		shoeNameLabel.setBounds(317, 16, 181, 53);
+		shoeNameLabel.setFont(new Font("Air Americana", Font.PLAIN, 30));
+		add(shoeNameLabel);
+
+		shoeNameField = new JTextField();
+		shoeNameField.setBounds(500, 13, 472, 51);
+		shoeNameField.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		shoeNameField.setColumns(10);
+		add(shoeNameField);
+
+
+		addShoeButton = new JButton("add shoe");
+		addShoeButton.setBounds(978, 12, 199, 52);
+		addShoeButton.setOpaque(true);
+		addShoeButton.setFont(new Font("Air Americana", Font.PLAIN, 24));
+		addShoeButton.setFocusPainted(false);
+		addShoeButton.setBackground(Color.WHITE);
+		add(addShoeButton);
+
+		logoLabel = new JLabel();
+		logoLabel.setBounds(572, 135, 350, 350);
+		logoLabel.setIcon(logo350);
+		add(logoLabel);
+	}
+
+	public void editOrderPanel(){
+		editor.readOrderData();
+
+		logoLabel = new JLabel();
+		logoLabel.setBounds(749, 11, 250, 250);
+		logoLabel.setIcon(logo250);
+		add(logoLabel);
+
+		setLayout(null);
+		streetLabel = new JLabel("Street:");
+		streetLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		streetLabel.setBounds(633, 292, 228, 43);
+		add(streetLabel);
+
+		cityLabel = new JLabel("city:");
+		cityLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		cityLabel.setBounds(633, 400, 166, 43);
+		add(cityLabel);
+
+		postalCodeLabel = new JLabel("postal code:");
+		postalCodeLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		postalCodeLabel.setBounds(633, 346, 190, 43);
+		add(postalCodeLabel);
+
+		countryLabel = new JLabel("country:");
+		countryLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		countryLabel.setBounds(633, 454, 119, 43);
+		add(countryLabel);
+
+		streetField = new JTextField();
+		streetField.setColumns(10);
+		streetField.setBounds(840, 291, 276, 43);
+		streetField.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		add(streetField);
+
+		cityField = new JTextField();
+		cityField.setColumns(10);
+		cityField.setBounds(840, 399, 276, 43);
+		cityField.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		add(cityField);
+
+		postalCodeField = new JTextField();
+		postalCodeField.setBounds(840, 346, 276, 43);
+		postalCodeField.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		add(postalCodeField);
+		postalCodeField.setColumns(10);
+
+		countryField = new JTextField();
+		countryField.setColumns(10);
+		countryField.setBounds(840, 453, 276, 43);
+		countryField.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		add(countryField);
+
+
+		backButton = new JButton("back");
+		backButton.setBounds(912, 544, 265, 85);
+		backButton.setOpaque(true);
+		backButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		backButton.setFocusPainted(false);
+		backButton.setBackground(Color.WHITE);
+		ActionListener actionListenerBack = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(loggedUser.equals("e")) {
+					removeAll();
+					editorMenu();
+					repaint();
+					revalidate();
+				}else{
+					removeAll();
+					adminMenu();
+					repaint();
+					revalidate();
+				}
+			}
+		};
+		backButton.addActionListener(actionListenerBack);
+		add(backButton);
+
+		orderModel = new DefaultListModel<>();
+		for(int i = 1; i<=editor.returnOrderMap().size(); i++){
+
+			orderModel.add(i-1, editor.returnOrderMap().get(i));
+
+		}
+
+		orderList = new JList(orderModel);
+		orderList.setFont(new Font("Air Americana", Font.PLAIN, 30));
+		orderList.setFixedCellHeight(50);
+
+		JScrollPane scrollPane = new JScrollPane(orderList);
+		scrollPane.setBounds(10, 11, 558, 653);
+		add(scrollPane);
+
+		saveButton = new JButton("save changes");
+		saveButton.setOpaque(true);
+		saveButton.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		saveButton.setFocusPainted(false);
+		saveButton.setBackground(Color.WHITE);
+		saveButton.setBounds(637, 544, 265, 85);
+		add(saveButton);
+	}
+
+
+	public void seeCustomersPanel(){
+		setLayout(null);
+
+		customer.readCustomerData();
+		customerModel = new DefaultListModel<>();
+		for(int i = 1; i<=customer.customerMap.size(); i++){
+			customerModel.add(i-1, customer.customerMap.get(i));
+		}
+
+		customerList = new JList<>(customerModel);
+		customerList.setFont(new Font("Air Americana", Font.PLAIN, 30));
+		customerList.setFixedCellHeight(50);
+		customerList.setSelectedIndex(0);
+
+		ArrayList<DefaultListModel> offerModels = new ArrayList<>();
+		ArrayList<DefaultListModel> orderModels = new ArrayList<>();
+
+		for(int i = 0 ; i<customer.customerMap.size(); i++){
+
+			offerModel = new DefaultListModel<>();
+			List<Offer> customerOffers = customer.customerMap.get(i+1).returnOffers();
+			for(int j = 0; j< customerOffers.size(); j++){
+				offerModel.add(j, customerOffers.get(j));
+			}
+			offerModels.add(offerModel);
+		}
+		offerList = new JList<>(offerModels.get(customerList.getSelectedIndex()));
+		offerList.setFont(new Font("Air Americana", Font.PLAIN, 30));
+		offerList.setFixedCellHeight(50);
+		offerList.setSelectionBackground(null);
+
+		for(int i = 0 ; i<customer.customerMap.size(); i++){
+
+			orderModel = new DefaultListModel<>();
+			List<Order> customerOrders = customer.customerMap.get(i+1).returnOrders();
+			for(int j = 0; j< customerOrders.size(); j++){
+				orderModel.add(j, customerOrders.get(j));
+			}
+			orderModels.add(orderModel);
+
+		}
+
+		orderList = new JList<>(orderModels.get(customerList.getSelectedIndex()));
+		orderList.setFont(new Font("Air Americana", Font.PLAIN, 30));
+		orderList.setFixedCellHeight(50);
+		orderList.setSelectionBackground(null);
+
+
+		splitPane = new JSplitPane();
+		splitPane.setEnabled(false);
+		splitPane.setBorder(null);
+		splitPane.setDividerSize(1);
+		splitPane.setDividerLocation(300);
+		splitPane.setBounds(7, 0, 1019, 637);
+		add(splitPane);
+
+		JScrollPane scrollPane= new JScrollPane(customerList);
+		scrollPane.getVerticalScrollBar().setBackground(Color.WHITE);
+		scrollPane.getVerticalScrollBar().setOpaque(true);
+		scrollPane.getVerticalScrollBar().setBorder(null);
+		scrollPane.setBorder(null);
+		splitPane.setLeftComponent(scrollPane);
+
+
+		JSplitPane panel = new JSplitPane();
+		panel.setLayout(null);
+		panel.setEnabled(false);
+		panel.setDividerLocation(318);
+		panel.setDividerSize(1);
+		panel.setOrientation(JSplitPane.VERTICAL_SPLIT);
+
+		JScrollPane scrollPane1= new JScrollPane(orderList);
+		scrollPane1.getVerticalScrollBar().setBackground(Color.WHITE);
+		scrollPane1.getVerticalScrollBar().setOpaque(true);
+		scrollPane1.getVerticalScrollBar().setBorder(null);
+		scrollPane1.setBorder(null);
+
+		JScrollPane scrollPane2= new JScrollPane(offerList);
+		scrollPane2.getVerticalScrollBar().setBackground(Color.WHITE);
+		scrollPane2.getVerticalScrollBar().setOpaque(true);
+		scrollPane2.getVerticalScrollBar().setBorder(null);
+		scrollPane2.setBorder(null);
+
+		panel.setTopComponent(scrollPane1);
+		panel.setBottomComponent(scrollPane2);
+
+		splitPane.setRightComponent(panel);
+
+		offersLabel = new JLabel("offers");
+		offersLabel.setBounds(1036, 470, 136, 40);
+		offersLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		add(offersLabel);
+
+		ordersLabel = new JLabel("orders");
+		ordersLabel.setBounds(1036, 155, 136, 40);
+		ordersLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		add(ordersLabel);
+
+		customerList.getSelectionModel().addListSelectionListener(e -> {
+
+			orderList.setModel(orderModels.get(customerList.getSelectedIndex()));
+			offerList.setModel(offerModels.get(customerList.getSelectedIndex()));
+
+		});
+
+		backButton = new JButton("back");
+		backButton.setBounds(1036, 573, 136, 57);
+		backButton.setOpaque(true);
+		backButton.setFont(new Font("Air Americana", Font.PLAIN, 25));
+		backButton.setFocusPainted(false);
+		backButton.setBackground(Color.WHITE);
+		ActionListener actionListenerBack = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeAll();
+				adminMenu();
+				repaint();
+				revalidate();
+			}
+		};
+		backButton.addActionListener(actionListenerBack);
+		add(backButton);
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 

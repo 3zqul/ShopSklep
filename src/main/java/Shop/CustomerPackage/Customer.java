@@ -77,7 +77,7 @@ public class Customer extends User {
                     index++;
                 }
             }
-            if (!result) {
+            if (result) {
                 FileInputStream inputFile1 = new FileInputStream(file);
                 Workbook workbook = new XSSFWorkbook(inputFile1);
                 Sheet userSheet = workbook.getSheet("User");
@@ -188,7 +188,6 @@ public class Customer extends User {
                 Workbook workbook4;
                 FileInputStream inputFile4 = new FileInputStream(file);
                 workbook4 = new XSSFWorkbook(inputFile4);
-
                 Sheet paymentSheet = workbook4.getSheet("Payment");
                 ArrayList<String> paymentDataList = new ArrayList<>();
                 paymentDataList.add(String.valueOf(index));
@@ -227,7 +226,6 @@ public class Customer extends User {
                 Workbook workbook5;
                 FileInputStream inputFile5 = new FileInputStream(file);
                 workbook5 = new XSSFWorkbook(inputFile5);
-
                 Sheet payoutSheet = workbook5.getSheet("Payout");
                 ArrayList<String> payoutDataList = new ArrayList<>();
                 payoutDataList.add(String.valueOf(index));
@@ -259,6 +257,116 @@ public class Customer extends User {
                 FileOutputStream payoutOs = new FileOutputStream(file);
                 workbook5.write(payoutOs);
                 payoutOs.close();
+
+                FileInputStream inputFile6 = new FileInputStream(file);
+                Workbook workbook6 = new XSSFWorkbook(inputFile6);
+                Sheet userSheet6 = workbook6.getSheet("Offer");
+                ArrayList<String> offerDataList = new ArrayList<>();
+                offerDataList.add(Integer.toString(index));
+                offerDataList.add("12");
+                offerDataList.add("12");
+                offerDataList.add("12");
+                offerDataList.add("12.0");
+                offerDataList.add("es");
+                offerDataList.add("es");
+                Map<Integer, ArrayList<String>> offerData = new HashMap<>();
+                offerData.put(index, offerDataList);
+                Set<Integer> newOfferRows = offerData.keySet();
+                int offerrownum = userSheet6.getLastRowNum();
+                for (Integer key : newOfferRows) {
+                    Row row = userSheet6.createRow(++offerrownum);
+                    ArrayList<String> objArr = offerData.get(key);
+                    int cellnum1 = 0;
+                    for (Object obj : objArr) {
+                        Cell cell = row.createCell(cellnum1++);
+                        if (obj instanceof String) {
+                            cell.setCellValue((String) obj);
+                        } else if (obj instanceof Boolean) {
+                            cell.setCellValue((Boolean) obj);
+                        } else if (obj instanceof Date) {
+                            cell.setCellValue((Date) obj);
+                        } else if (obj instanceof Double) {
+                            cell.setCellValue((Double) obj);
+                        } else if (obj instanceof Integer) {
+                            cell.setCellValue((Integer) obj);
+                        }
+                    }
+                }
+                FileOutputStream offerOs = new FileOutputStream(file);
+                workbook6.write(offerOs);
+                offerOs.close();
+
+                FileInputStream inputFile7 = new FileInputStream(file);
+                Workbook workbook7 = new XSSFWorkbook(inputFile7);
+                Sheet userSheet7 = workbook7.getSheet("Order");
+                ArrayList<String> orderDataList = new ArrayList<>();
+                orderDataList.add("40");
+                orderDataList.add("es");
+                orderDataList.add(Integer.toString(index));
+                orderDataList.add("40");
+                Map<Integer, ArrayList<String>> orderData = new HashMap<>();
+                orderData.put(index, orderDataList);
+                Set<Integer> newOrderRows = orderData.keySet();
+                int orderrownum = userSheet7.getLastRowNum();
+                for (Integer key : newOrderRows) {
+                    Row row = userSheet7.createRow(++orderrownum);
+                    ArrayList<String> objArr = orderData.get(key);
+                    int cellnum1 = 0;
+                    for (Object obj : objArr) {
+                        Cell cell = row.createCell(cellnum1++);
+                        if (obj instanceof String) {
+                            cell.setCellValue((String) obj);
+                        } else if (obj instanceof Boolean) {
+                            cell.setCellValue((Boolean) obj);
+                        } else if (obj instanceof Date) {
+                            cell.setCellValue((Date) obj);
+                        } else if (obj instanceof Double) {
+                            cell.setCellValue((Double) obj);
+                        } else if (obj instanceof Integer) {
+                            cell.setCellValue((Integer) obj);
+                        }
+                    }
+                }
+                FileOutputStream orderOs = new FileOutputStream(file);
+                workbook7.write(orderOs);
+                orderOs.close();
+
+                FileInputStream inputFile8 = new FileInputStream(file);
+                Workbook workbook8 = new XSSFWorkbook(inputFile8);
+                Sheet userSheet8 = workbook8.getSheet("ShoeDetails");
+                ArrayList<String> shoeDetailsDataList = new ArrayList<>();
+                shoeDetailsDataList.add(Integer.toString(index));
+                shoeDetailsDataList.add("12");
+                shoeDetailsDataList.add("12");
+                shoeDetailsDataList.add("es");
+                shoeDetailsDataList.add("12.0");
+                shoeDetailsDataList.add("40");
+                Map<Integer, ArrayList<String>> shoeDetailsData = new HashMap<>();
+                shoeDetailsData.put(index, shoeDetailsDataList);
+                Set<Integer> newShoeDetailsRows = shoeDetailsData.keySet();
+                int shoedetailsrownum = userSheet8.getLastRowNum();
+                for (Integer key : newShoeDetailsRows) {
+                    Row row = userSheet8.createRow(++shoedetailsrownum);
+                    ArrayList<String> objArr = shoeDetailsData.get(key);
+                    int cellnum1 = 0;
+                    for (Object obj : objArr) {
+                        Cell cell = row.createCell(cellnum1++);
+                        if (obj instanceof String) {
+                            cell.setCellValue((String) obj);
+                        } else if (obj instanceof Boolean) {
+                            cell.setCellValue((Boolean) obj);
+                        } else if (obj instanceof Date) {
+                            cell.setCellValue((Date) obj);
+                        } else if (obj instanceof Double) {
+                            cell.setCellValue((Double) obj);
+                        } else if (obj instanceof Integer) {
+                            cell.setCellValue((Integer) obj);
+                        }
+                    }
+                }
+                FileOutputStream shoeDetailsOs = new FileOutputStream(file);
+                workbook8.write(shoeDetailsOs);
+                shoeDetailsOs.close();
             }
             } catch(Exception e){
                 e.printStackTrace();
@@ -287,9 +395,23 @@ public class Customer extends User {
         offerList.remove(index);
     }
 
+    public void createOrder(String orderDate, int customerID, int sellerID, ShoeDetails shoeDetails){
+        int index = 0;
+        for(int i=1; i<customerMap.size(); i++){
+            index += customerMap.get(i).orderList.size();
+        }
+        Order order = new Order(index, orderDate, customerID, sellerID, new ShoeDetails(shoeDetails.shoeID, shoeDetails.shoeName, shoeDetails.shoeSize, shoeDetails.shoePrice, index), userAddress);
+        orderList.add(order);
+    }
+
+    public void deleteOrder(int index){
+        orderList.remove(index);
+    }
+
     @Override
     public String signIn(String userEmail, String password) {
-        for(int i=1; i<customerMap.size()+2; i++) {
+        readCustomerData();
+        for(int i=1; i<customerMap.size()+1; i++) {
             if (customerMap.get(i).userEmail.equals(userEmail) && customerMap.get(i).password.equals(password)) {
                 this.userAddress = customerMap.get(i).userAddress;
                 this.userName = customerMap.get(i).userName;

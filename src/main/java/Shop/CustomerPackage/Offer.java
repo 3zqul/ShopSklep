@@ -35,4 +35,9 @@ public class Offer {
     public int returnShoeID(){
         return shoeID;
     }
+
+    @Override
+    public String toString(){
+        return "shoe: " + shoeName + " size: " + shoeSize + " price: " + offerPrice  + " type: " + offerType ;
+    }
 }

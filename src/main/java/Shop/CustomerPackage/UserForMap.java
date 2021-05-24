@@ -13,4 +13,20 @@ public class UserForMap{
         this.userEmail = userEmail;
         this.userType = userType;
     }
+
+    public Integer returnUserID() {
+        return userID;
+    }
+
+    public String returnPassword() {
+        return password;
+    }
+
+    public String returnUserEmail() {
+        return userEmail;
+    }
+
+    public String returnUserType() {
+        return userType;
+    }
 }

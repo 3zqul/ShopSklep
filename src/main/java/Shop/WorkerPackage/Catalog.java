@@ -80,22 +80,6 @@ public class Catalog {
         return result;
     }
 
-    public void addShoe(String name){
-        int index;
-        index=shoeList.size();
-        for(int i=1; i<=8; i++){
-            shoeList.add(new Shoe(index+i, name, 37+i, (float) 0, (float) 0));
-        }
-    }
-
-    public void deleteShoe(String name){
-        for(int i=0; i<shoeList.size(); i++){
-            if(shoeList.get(i).shoeName.equals(name)){
-                shoeList.remove(i);
-            }
-        }
-    }
-
     public ArrayList<Shoe> returnCatalog(){
         return shoeList;
     }
@@ -118,6 +102,7 @@ public class Catalog {
     }
 
     public void setShoePrice(Map<Integer, Offer> offerMap){
+
         for(int i=1; i<=offerMap.size(); i++){
             switch (offerMap.get(i).returnOfferType()){
                 case "buy":

@@ -15,6 +15,6 @@ public class Address {
     @Override
     public String toString(){
 
-        return "Street: " + this.street + " City: " + this.city + " Postal code: " + this.postalCode + " Country: "+ this.country;
+        return this.street + " " + this.city + " " + this.postalCode + " "+ this.country;
     }
 }

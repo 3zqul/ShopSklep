@@ -7,24 +7,29 @@ public class Order {
     int sellerID;
     int customerID;
     ShoeDetails shoeDetails;
+    Address orderAddress;
 
-    public Order(int orderID, String orderDate, int customerID, int sellerID, ShoeDetails shoeDetails){
-        this.orderID=orderID;
-        this.orderDate=orderDate;
-        this.sellerID=sellerID;
-        this.customerID=customerID;
-        this.shoeDetails=shoeDetails;
+    public Order(int orderID, String orderDate, int customerID, int sellerID, ShoeDetails shoeDetails, Address orderAddress){
+        this.orderID = orderID;
+        this.orderDate = orderDate;
+        this.sellerID = sellerID;
+        this.customerID = customerID;
+        this.shoeDetails = shoeDetails;
+        this.orderAddress = orderAddress;
     }
 
-    public Order() {
+    public Order() {}
 
+    public int returnShoeID(){
+        return this.shoeDetails.shoeID;
     }
 
-    public void createOrder(){
-
+    public String returnShoeName(){
+        return shoeDetails.shoeName;
     }
 
-    public void deleteOrder(){
-
+    @Override
+    public String toString(){
+        return " id: " + orderID + " shoe: " + shoeDetails.shoeName + " size: " + shoeDetails.shoeSize + " price: " + shoeDetails.shoePrice + " address: " + orderAddress;
     }
 }
