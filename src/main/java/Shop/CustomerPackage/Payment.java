@@ -15,6 +15,27 @@ public class Payment {
         this.cardName=cardName;
         this.cardNo=cardNo;
     }
+
+    public String returnCardNo() {
+        return cardNo;
+    }
+
+    public String returnCardName() {
+        return cardName;
+    }
+
+    public int returnCardExpiryMonth() {
+        return cardExpiryMonth;
+    }
+
+    public int returnCardExpiryYear() {
+        return cardExpiryYear;
+    }
+
+    public String returnCardCVV() {
+        return cardCVV;
+    }
+
     @Override
     public String toString(){
 

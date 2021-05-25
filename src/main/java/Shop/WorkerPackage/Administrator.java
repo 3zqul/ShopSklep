@@ -4,12 +4,11 @@ import Shop.CustomerPackage.Offer;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Administrator extends Editor{
 
@@ -114,6 +113,73 @@ public class Administrator extends Editor{
                     index++;
                 }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateOfferDataBase(){
+        try {
+            Workbook workbook;
+            FileInputStream inputFile = new FileInputStream(new File("D:\\Shop\\src\\main\\java\\Shop\\DataBase.xlsx"));
+            workbook = new XSSFWorkbook(inputFile);
+            Sheet sheet = workbook.getSheet("Offer");
+            int lastRowNum=sheet.getLastRowNum();
+            for(int i=lastRowNum; i>0; i--) {
+                sheet.shiftRows(i, lastRowNum, -1);
+            }
+            sheet.shiftRows(1, lastRowNum, -1);
+            FileOutputStream outFile = new FileOutputStream(new File("D:\\Shop\\src\\main\\java\\Shop\\DataBase.xlsx"));
+            workbook.write(outFile);
+            outFile.close();
+            ArrayList<String> offerData;
+            Map<Integer, ArrayList<String>> offerDataMap = new HashMap<>();
+            offerData = new ArrayList<>();
+            offerData.add("userID");
+            offerData.add("accountNo");
+            offerData.add("accountName");
+            offerDataMap.put(0, offerData);
+            for(int i=0; i<offerMap.size(); i++) {
+                for(int j=0; j<customerMap.size(); j++) {
+                    for(int k=0; k<customerMap.get(j).returnOffers().size(); k++) {
+                        if (offerMap.get(i).returnOfferID() == customerMap.get(j).returnOffers().get(k).returnOfferID()) {
+                            offerData = new ArrayList<>();
+                            offerData.add(String.valueOf(customerMap.get(j).returnUserID()));
+                            offerData.add(String.valueOf(offerMap.get(i).returnOfferID()));
+                            offerData.add(String.valueOf(offerMap.get(i).returnShoeID()));
+                            offerData.add(String.valueOf(offerMap.get(i).returnShoeSize()));
+                            offerData.add(String.valueOf(offerMap.get(i).returnOfferPrice()));
+                            offerData.add(offerMap.get(i).returnOfferType());
+                            offerData.add(offerMap.get(i).returnShoeName());
+                            offerDataMap.put(i + 1, offerData);
+                        }
+                    }
+                }
+            }
+            Set<Integer> newOfferRows = offerDataMap.keySet();
+            int newofferrows = 0;
+            for (Integer key : newOfferRows) {
+                Row row = sheet.createRow(newofferrows++);
+                ArrayList<String> objArr = offerDataMap.get(key);
+                int cellnum = 0;
+                for (Object obj : objArr) {
+                    Cell cell = row.createCell(cellnum++);
+                    if (obj instanceof String) {
+                        cell.setCellValue((String) obj);
+                    } else if (obj instanceof Boolean) {
+                        cell.setCellValue((Boolean) obj);
+                    } else if (obj instanceof Date) {
+                        cell.setCellValue((Date) obj);
+                    } else if (obj instanceof Double) {
+                        cell.setCellValue((Double) obj);
+                    } else if (obj instanceof Integer) {
+                        cell.setCellValue((Integer) obj);
+                    }
+                }
+            }
+            FileOutputStream payoutWrite = new FileOutputStream(new File("D:\\Shop\\src\\main\\java\\Shop\\DataBase.xlsx"));
+            workbook.write(payoutWrite);
+            payoutWrite.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

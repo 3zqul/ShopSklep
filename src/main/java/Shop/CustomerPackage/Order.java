@@ -18,7 +18,27 @@ public class Order {
         this.orderAddress = orderAddress;
     }
 
+    public void editOrderAddress(Address address){
+        this.orderAddress = address;
+    }
+
+    public String returnOrderDate() {
+        return orderDate;
+    }
+
+    public int returnSellerID() {
+        return sellerID;
+    }
+
+    public int returnCustomerID() {
+        return customerID;
+    }
+
     public Order() {}
+
+    public ShoeDetails returnShoeDetails() {
+        return shoeDetails;
+    }
 
     public int returnShoeID(){
         return this.shoeDetails.shoeID;
@@ -26,6 +46,14 @@ public class Order {
 
     public String returnShoeName(){
         return shoeDetails.shoeName;
+    }
+
+    public int returnOrderID(){
+        return orderID;
+    }
+
+    public Address returnOrderAddress() {
+        return orderAddress;
     }
 
     @Override

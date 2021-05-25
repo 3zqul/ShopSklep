@@ -44,27 +44,23 @@ public class Statistics {
         Catalog catalog = new Catalog();
         admin.readOrderData();
         admin.readOfferData();
-        admin.returnOrderMap();
         catalog.readShoeList(admin.returnOfferMap());
-
         Map<Integer, Integer> idMap = new HashMap<>();
         for(int i =0 ; i<catalog.shoeList.size(); i++) {
             idMap.put(catalog.shoeList.get(i).shoeID,0);
         }
-        int essa;
+        int idToMap;
         for(int i =1 ; i<=catalog.shoeList.size(); i++){
             for(int j =1 ; j<=admin.orderMap.size(); j++){
                 if(i==admin.orderMap.get(j).returnShoeID()){
-                    essa = idMap.get(i);
-                    essa+=1;
-                    idMap.put(i, essa++);
+                    idToMap = idMap.get(i);
+                    idToMap+=1;
+                    idMap.put(i, idToMap++);
                 }
             }
         }
         for(int i = 1; i<=idMap.size();i++){
-            System.out.println(idMap.get(i));
         }
-        System.out.println();
         Map<Integer, Integer> shoesMap = new HashMap<>();
         int j=1;
         int[] tab = new int[4];
@@ -75,9 +71,50 @@ public class Statistics {
                 j++;
             }
         }
-        for(int i = 1; i<j;i++){
-            System.out.println(shoesMap.get(i));
+        int index=0, max=0;
+        for(int i = 0; i<tab.length; i++){
+            if(tab[i]>max){
+                max = tab[i];
+                index=i;
+            }
         }
+        mostPopularShoe =catalog.shoeList.get(index*8+1).shoeName;
+        System.out.println(mostPopularShoe);
         return mostPopularShoe;
+    }
+
+    public String updateMostPopularSize(){
+
+        Map<String, Integer> nameStastistic = new HashMap<>();
+        List<String> sizeList = new ArrayList<>();
+        sizeList.add("45");
+        sizeList.add("38");
+        sizeList.add("39");
+        sizeList.add("40");
+        sizeList.add("41");
+        sizeList.add("42");
+        sizeList.add("43");
+        sizeList.add("44");
+        Administrator admin = new Administrator();
+        Catalog catalog = new Catalog();
+        admin.readOrderData();
+        admin.readOfferData();
+        catalog.readShoeList(admin.returnOfferMap());
+        Map<Integer, Integer> idMap = new HashMap<>();
+        int[] sizeTab={0,0,0,0,0,0,0,0}; //45,38...44
+        for(int i =1 ; i<=admin.orderMap.size(); i++){
+            sizeTab[admin.orderMap.get(i).returnShoeID()%8]+=1;
+        }
+        int index=0, max=0;
+        for(int i = 0; i<sizeTab.length; i++){
+            if(sizeTab[i]>max){
+                max = sizeTab[i];
+                index=i;
+            }
+        }
+        mostPopularSize =sizeList.get(index);
+        System.out.println(mostPopularSize);
+
+        return mostPopularSize;
     }
 }

@@ -9,4 +9,17 @@ public class Payout {
         this.accountName=accountName;
         this.accountNo=accountNo;
     }
+
+    public String returnAccountNo() {
+        return accountNo;
+    }
+
+    public String returnAccountName() {
+        return accountName;
+    }
+
+    @Override
+    public String toString(){
+        return "Account No: " + accountNo + " Account Name: " + accountName;
+    }
 }

@@ -50,16 +50,7 @@ public class Catalog {
                 i++;
             }
             for (int j = 2; j < map.size() + 1; j++) {
-                shoe = new Shoe();
-                convert = new Float(map.get(j).get(0));
-                shoe.shoeID = convert.intValue();
-                shoe.shoeName = map.get(j).get(1);
-                convert = new Float(map.get(j).get(2));
-                shoe.shoeSize = convert.intValue();
-                convert = new Float(map.get(j).get(3));
-                shoe.shoeBuyPrice = convert;
-                convert = new Float(map.get(j).get(4));
-                shoe.shoeSellPrice = convert;
+                shoe = new Shoe(new Float(map.get(j).get(0)).intValue(), map.get(j).get(1), new Float(map.get(j).get(2)).intValue(), new Float(map.get(j).get(3)), new Float(map.get(j).get(4)), 0, 0);
                 shoeList.add(shoe);
             }
         } catch (NullPointerException | IOException | NumberFormatException e) {
@@ -108,7 +99,8 @@ public class Catalog {
                 case "buy":
                     for(int j=1; j<shoeList.size(); j++) {
                         if (offerMap.get(i).returnShoeID() == shoeList.get(j).shoeID && (offerMap.get(i).returnOfferPrice()>shoeList.get(j).shoeBuyPrice || shoeList.get(j).shoeBuyPrice==0)){
-                            shoeList.get(j).shoeBuyPrice=offerMap.get(i).returnOfferPrice();
+                            shoeList.get(j).shoeBuyPrice = offerMap.get(i).returnOfferPrice();
+                            shoeList.get(j).buyOfferID = offerMap.get(i).returnOfferID();
                         }
                     }
                     break;
@@ -116,6 +108,7 @@ public class Catalog {
                     for(int j=1; j<shoeList.size(); j++) {
                         if (offerMap.get(i).returnShoeID() == shoeList.get(j).shoeID && (offerMap.get(i).returnOfferPrice()<shoeList.get(j).shoeSellPrice || shoeList.get(j).shoeSellPrice==0)){
                             shoeList.get(j).shoeSellPrice=offerMap.get(i).returnOfferPrice();
+                            shoeList.get(j).sellOfferID = offerMap.get(i).returnOfferID();
                         }
                     }
                     break;
@@ -125,7 +118,7 @@ public class Catalog {
         }
     }
 
-    public void updateDataBase(){
+    public void updateShoeDataBase(){
         try {
             Workbook workbook;
             FileInputStream inputFile = new FileInputStream(new File("D:\\Shop\\src\\main\\java\\Shop\\DataBase.xlsx"));

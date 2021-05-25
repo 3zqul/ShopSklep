@@ -55,6 +55,8 @@ public class Panels extends JPanel implements ActionListener{
 	private JLabel monthLabel;
 	private JLabel yearLabel;
 	private JLabel CvvLabel;
+	private JLabel accountNameLabel;
+	private JLabel cardNameLabel;
 	private JPasswordField confirmPasswordField;
 	private JTextField accountNoField;
 	private JTextField streetField ;
@@ -65,6 +67,8 @@ public class Panels extends JPanel implements ActionListener{
 	private JTextField monthField ;
 	private JTextField yearField ;
 	private JTextField cvvField;
+	private JTextField accountNameField;
+	private JTextField cardNameField;
 	private JButton confirmButton;
 	private JFrame frame;
 	private JSplitPane splitPane;
@@ -100,6 +104,7 @@ public class Panels extends JPanel implements ActionListener{
 	ImageIcon logo250 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
 	ImageIcon logo350 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo350.png");
 	ImageIcon logo100 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo100.png");
+
 
 	public Panels(JFrame frame){
 		this.frame= frame;
@@ -220,6 +225,11 @@ public class Panels extends JPanel implements ActionListener{
 		accountNoLabel.setBounds(114, 253, 228, 43);
 		add(accountNoLabel);
 
+		accountNameLabel = new JLabel("Acc Name:");
+		accountNameLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		accountNameLabel.setBounds(638, 253, 180, 43);
+		add(accountNameLabel);
+
 		streetLabel = new JLabel("Street:");
 		streetLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
 		streetLabel.setBounds(114, 307, 228, 43);
@@ -264,6 +274,11 @@ public class Panels extends JPanel implements ActionListener{
 		CvvLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
 		CvvLabel.setBounds(638, 471, 180, 42);
 		add(CvvLabel);
+
+		cardNameLabel = new JLabel("Card name:");
+		cardNameLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		cardNameLabel.setBounds(114, 471, 180, 43);
+		add(cardNameLabel);
 
 		selectSizeLabel = new JLabel("Size:");
 		selectSizeLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
@@ -348,6 +363,18 @@ public class Panels extends JPanel implements ActionListener{
 		add(cvvField);
 		cvvField.setColumns(10);
 
+		cardNameField = new JTextField();
+		cardNameField.setBounds(337, 470, 276, 43);
+		cardNameField.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		add(cardNameField);
+		cardNameField.setColumns(10);
+
+		accountNameField = new JTextField();
+		accountNameField.setBounds(783, 253, 276, 43);
+		accountNameField.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		add(accountNameField);
+		accountNameField.setColumns(10);
+
 		sizes = new DefaultListModel<>();
 		sizes.addElement("38");
 		sizes.addElement("39");
@@ -376,20 +403,17 @@ public class Panels extends JPanel implements ActionListener{
 		ActionListener actionListerRegister = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(customer.signUp(emailField.getText(), nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())), new Address(streetField.getText(), cityField.getText(), postalCodeField.getText(), countryField.getText()), new Payment(cardField.getText(), nameField.getText(), Integer.parseInt(yearField.getText()), Integer.parseInt(monthField.getText()), cvvField.getText()), new Payout(accountNoField.getText(), nameField.getText()))){
+				if(customer.signUp(emailField.getText(), nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())), new Address(streetField.getText(), cityField.getText(), postalCodeField.getText(), countryField.getText()), new Payment(cardField.getText(), cardNameField.getText(), Integer.parseInt(yearField.getText()), Integer.parseInt(monthField.getText()), cvvField.getText()), new Payout(accountNoField.getText(), accountNameField.getText()))){
 					removeAll();
 					setBackground(new Color(240,240,240));
 					loginPanel();
 					repaint();
 					revalidate();
 				}
-
 			}
 		};
 		registerButton.addActionListener(actionListerRegister);
 		add(registerButton);
-
-
 
 		backButton = new JButton("Back");
 		backButton.setFont(new Font("Air Americana", Font.PLAIN, 30));
@@ -410,8 +434,6 @@ public class Panels extends JPanel implements ActionListener{
 		backButton.setFocusPainted(false);
 		backButton.setBackground(SystemColor.control);
 		add(backButton);
-
-
 	}
 
 	public void accountPanel(){
@@ -434,15 +456,16 @@ public class Panels extends JPanel implements ActionListener{
 		nameLabel.setVisible(false);
 		add(nameLabel);
 
-		cardLabel = new JLabel("Card number:");
-		cardLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
-		cardLabel.setBounds(166, 417, 180, 42);
-		add(cardLabel);
-
 		accountNoLabel = new JLabel("Bank account no:");
 		accountNoLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
 		accountNoLabel.setBounds(166, 253, 228, 43);
 		add(accountNoLabel);
+
+		accountNameLabel = new JLabel("Acc Name:");
+		accountNameLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		accountNameLabel.setBounds(690, 253, 180, 43);
+		accountNameLabel.setVisible(false);
+		add(accountNameLabel);
 
 		streetLabel = new JLabel("Street:");
 		streetLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
@@ -489,6 +512,17 @@ public class Panels extends JPanel implements ActionListener{
 		CvvLabel.setBounds(690, 470, 180, 42);
 		add(CvvLabel);
 
+		cardLabel = new JLabel("Card number:");
+		cardLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		cardLabel.setBounds(166, 417, 180, 42);
+		add(cardLabel);
+
+		cardNameLabel = new JLabel("Card name:");
+		cardNameLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
+		cardNameLabel.setBounds(166, 470, 180, 43);
+		cardNameLabel.setVisible(false);
+		add(cardNameLabel);
+
 		selectSizeLabel = new JLabel("Size:");
 		selectSizeLabel.setFont(new Font("Air Americana", Font.PLAIN, 35));
 		selectSizeLabel.setBounds(166, 523, 180, 42);
@@ -517,6 +551,12 @@ public class Panels extends JPanel implements ActionListener{
 		accountNoField.setBounds(389, 253, 276, 43);
 		accountNoField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(accountNoField);
+
+		accountNameField = new JTextField();
+		accountNameField.setBounds(835, 253, 276, 43);
+		accountNameField.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		add(accountNameField);
+		accountNameField.setColumns(10);
 
 		streetField = new JTextField();
 		streetField.setColumns(10);
@@ -547,6 +587,12 @@ public class Panels extends JPanel implements ActionListener{
 		cardField.setBounds(389, 416, 276, 43);
 		cardField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(cardField);
+
+		cardNameField = new JTextField();
+		cardNameField.setBounds(389, 470, 276, 43);
+		cardNameField.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		add(cardNameField);
+		cardNameField.setColumns(10);
 
 		monthField = new JTextField();
 		monthField.setColumns(10);
@@ -594,7 +640,7 @@ public class Panels extends JPanel implements ActionListener{
 		ActionListener actionListerConfirm = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				customer.editCustomer(passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())), confirmPasswordField.getText(), new Payment(cardField.getText(), nameField.getText(), Integer.parseInt(monthField.getText()),Integer.parseInt(yearField.getText()), cvvField.getText()), new Address(streetField.getText(), cityField.getText() , postalCodeField.getText(), countryField.getText()));
+				customer.editCustomer(nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())), confirmPasswordField.getText(), new Payout(accountNoField.getText(), accountNameField.getText()), new Payment(cardField.getText(), cardNameField.getText(), Integer.parseInt(monthField.getText()),Integer.parseInt(yearField.getText()), cvvField.getText()), new Address(streetField.getText(), cityField.getText() , postalCodeField.getText(), countryField.getText()));
 			}
 		};
 		confirmButton.addActionListener(actionListerConfirm);
@@ -828,7 +874,6 @@ public class Panels extends JPanel implements ActionListener{
 		shoeList.setCellRenderer(renderer);
 		shoeList.setFixedCellHeight(40);
 
-
 		splitPane = new JSplitPane();
 		splitPane.setEnabled(false);
 		splitPane.setBorder(null);
@@ -934,7 +979,6 @@ public class Panels extends JPanel implements ActionListener{
 
 	public void editAccountVisibility(boolean status){
 
-
 		nameLabel.setVisible(status);
 		passwordLabel.setVisible(status);
 		confirmLabel.setVisible(status);
@@ -963,6 +1007,10 @@ public class Panels extends JPanel implements ActionListener{
 		cvvField.setVisible(status);
 		confirmButton.setVisible(status);
 		sizeList.setVisible(status);
+		accountNameField.setVisible(status);
+		cardNameField.setVisible(status);
+		cardNameLabel.setVisible(status);
+		accountNameLabel.setVisible(status);
 	}
 
 	public void adminMenu(){
@@ -1207,7 +1255,6 @@ public class Panels extends JPanel implements ActionListener{
 		countryField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(countryField);
 
-
 		backButton = new JButton("back");
 		backButton.setBounds(912, 544, 265, 85);
 		backButton.setOpaque(true);
@@ -1235,9 +1282,7 @@ public class Panels extends JPanel implements ActionListener{
 
 		orderModel = new DefaultListModel<>();
 		for(int i = 1; i<=editor.returnOrderMap().size(); i++){
-
 			orderModel.add(i-1, editor.returnOrderMap().get(i));
-
 		}
 
 		orderList = new JList(orderModel);
@@ -1254,9 +1299,19 @@ public class Panels extends JPanel implements ActionListener{
 		saveButton.setFocusPainted(false);
 		saveButton.setBackground(Color.WHITE);
 		saveButton.setBounds(637, 544, 265, 85);
+		ActionListener actionListenerSave = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				editor.editOrder(orderList.getSelectedIndex()+1, streetField.getText(), cityField.getText(), postalCodeField.getText(), countryField.getText());
+				removeAll();
+				editorMenu();
+				repaint();
+				revalidate();
+			}
+		};
+		saveButton.addActionListener(actionListenerSave);
 		add(saveButton);
 	}
-
 
 	public void seeCustomersPanel(){
 		setLayout(null);
@@ -1297,14 +1352,12 @@ public class Panels extends JPanel implements ActionListener{
 				orderModel.add(j, customerOrders.get(j));
 			}
 			orderModels.add(orderModel);
-
 		}
 
 		orderList = new JList<>(orderModels.get(customerList.getSelectedIndex()));
 		orderList.setFont(new Font("Air Americana", Font.PLAIN, 30));
 		orderList.setFixedCellHeight(50);
 		orderList.setSelectionBackground(null);
-
 
 		splitPane = new JSplitPane();
 		splitPane.setEnabled(false);
@@ -1320,7 +1373,6 @@ public class Panels extends JPanel implements ActionListener{
 		scrollPane.getVerticalScrollBar().setBorder(null);
 		scrollPane.setBorder(null);
 		splitPane.setLeftComponent(scrollPane);
-
 
 		JSplitPane panel = new JSplitPane();
 		panel.setLayout(null);
@@ -1357,10 +1409,8 @@ public class Panels extends JPanel implements ActionListener{
 		add(ordersLabel);
 
 		customerList.getSelectionModel().addListSelectionListener(e -> {
-
 			orderList.setModel(orderModels.get(customerList.getSelectedIndex()));
 			offerList.setModel(offerModels.get(customerList.getSelectedIndex()));
-
 		});
 
 		backButton = new JButton("back");

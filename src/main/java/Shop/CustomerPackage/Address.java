@@ -12,6 +12,23 @@ public class Address {
         this.country=country;
         this.postalCode=postalCode;
     }
+
+    public String returnStreet() {
+        return street;
+    }
+
+    public String returnCity() {
+        return city;
+    }
+
+    public String returnPostalCode() {
+        return postalCode;
+    }
+
+    public String returnCountry() {
+        return country;
+    }
+
     @Override
     public String toString(){
 

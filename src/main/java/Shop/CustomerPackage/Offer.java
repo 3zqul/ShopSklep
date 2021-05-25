@@ -20,6 +20,10 @@ public class Offer {
 
     public Offer() {}
 
+    public int returnShoeSize() {
+        return shoeSize;
+    }
+
     public String returnOfferType(){
         return offerType;
     }
@@ -34,6 +38,10 @@ public class Offer {
 
     public int returnShoeID(){
         return shoeID;
+    }
+
+    public String returnShoeName() {
+        return shoeName;
     }
 
     @Override
