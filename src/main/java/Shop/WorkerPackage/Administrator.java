@@ -69,6 +69,17 @@ public class Administrator extends Editor{
         }
     }
 
+    public void removeOffer(int index){
+        System.out.println(offerMap);
+        System.out.println();
+        offerMap.remove(index);
+        for(int i = index+1; i<=offerMap.size();i++ ){
+            offerMap.put(i-1,offerMap.get(i));
+        }
+        offerMap.remove(offerMap.size());
+        System.out.println(offerMap);
+    }
+
     public Map<Integer, Offer> returnOfferMap(){
         return offerMap;
     }

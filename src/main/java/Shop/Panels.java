@@ -101,15 +101,16 @@ public class Panels extends JPanel implements ActionListener{
 	private String loggedUser;
 	private Statistics statistics = new Statistics();
 
-	ImageIcon logo250 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo250.png");
-	ImageIcon logo350 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo350.png");
-	ImageIcon logo100 = new ImageIcon("D:\\Shop\\src\\main\\java\\Images\\logo100.png");
+	ImageIcon logo250 = new ImageIcon("C:\\Users\\bigos\\IdeaProjects\\ShopSklep\\src\\main\\java\\Images\\logo250.png");
+	ImageIcon logo350 = new ImageIcon("C:\\Users\\bigos\\IdeaProjects\\ShopSklep\\src\\main\\java\\Images\\logo350.png");
+	ImageIcon logo100 = new ImageIcon("C:\\Users\\bigos\\IdeaProjects\\ShopSklep\\src\\main\\java\\Images\\logo100.png");
 
 
 	public Panels(JFrame frame){
 		this.frame= frame;
 		loginPanel();
 		statistics.updateMostPopularShoe();
+		statistics.updateMostPopularSize();
 	}
 
 	public void loginPanel(){
@@ -410,6 +411,7 @@ public class Panels extends JPanel implements ActionListener{
 					repaint();
 					revalidate();
 				}
+
 			}
 		};
 		registerButton.addActionListener(actionListerRegister);
@@ -531,6 +533,7 @@ public class Panels extends JPanel implements ActionListener{
 		nameField = new JTextField();
 		nameField.setBounds(389, 146, 276, 43);
 		nameField.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		nameField.setText(customer.returnUserName());
 		add(nameField);
 		nameField.setColumns(10);
 
@@ -549,35 +552,41 @@ public class Panels extends JPanel implements ActionListener{
 		accountNoField = new JTextField();
 		accountNoField.setColumns(10);
 		accountNoField.setBounds(389, 253, 276, 43);
+		accountNoField.setText(customer.returnUserPayout().returnAccountNo());
 		accountNoField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(accountNoField);
 
 		accountNameField = new JTextField();
 		accountNameField.setBounds(835, 253, 276, 43);
+		accountNameField.setText(customer.returnUserPayout().returnAccountName());
 		accountNameField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(accountNameField);
 		accountNameField.setColumns(10);
 
 		streetField = new JTextField();
 		streetField.setColumns(10);
+		streetField.setText(customer.returnUserAddress().returnStreet());
 		streetField.setBounds(389, 307, 276, 43);
 		streetField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(streetField);
 
 		cityField = new JTextField();
 		cityField.setColumns(10);
+		cityField.setText(customer.returnUserAddress().returnCity());
 		cityField.setBounds(389, 361, 276, 43);
 		cityField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(cityField);
 
 		postalCodeField = new JTextField();
 		postalCodeField.setBounds(856, 307, 255, 43);
+		postalCodeField.setText(customer.returnUserAddress().returnPostalCode());
 		postalCodeField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(postalCodeField);
 		postalCodeField.setColumns(10);
 
 		countryField = new JTextField();
 		countryField.setColumns(10);
+		countryField.setText(customer.returnUserAddress().returnCountry());
 		countryField.setBounds(808, 361, 303, 43);
 		countryField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(countryField);
@@ -585,11 +594,13 @@ public class Panels extends JPanel implements ActionListener{
 		cardField = new JTextField();
 		cardField.setColumns(10);
 		cardField.setBounds(389, 416, 276, 43);
+		cardField.setText(customer.returnUserPayment().returnCardNo());
 		cardField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(cardField);
 
 		cardNameField = new JTextField();
 		cardNameField.setBounds(389, 470, 276, 43);
+		cardNameField.setText(customer.returnUserPayment().returnCardName());
 		cardNameField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(cardNameField);
 		cardNameField.setColumns(10);
@@ -597,17 +608,20 @@ public class Panels extends JPanel implements ActionListener{
 		monthField = new JTextField();
 		monthField.setColumns(10);
 		monthField.setBounds(808, 417, 113, 43);
+		monthField.setText(new Integer(customer.returnUserPayment() .returnCardExpiryMonth()).toString());
 		monthField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(monthField);
 
 		yearField = new JTextField();
 		yearField.setColumns(10);
 		yearField.setBounds(1011, 417, 100, 43);
+		yearField.setText(new Integer(customer.returnUserPayment() .returnCardExpiryYear()).toString());
 		yearField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(yearField);
 
 		cvvField = new JTextField();
 		cvvField.setBounds(808, 470, 113, 43);
+		cvvField.setText(customer.returnUserPayment().returnCardCVV());
 		cvvField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		add(cvvField);
 		cvvField.setColumns(10);
@@ -623,12 +637,17 @@ public class Panels extends JPanel implements ActionListener{
 		sizes.addElement("45");
 
 		sizeList = new JList<>(sizes);
-		sizeList.setValueIsAdjusting(true);
-		sizeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		sizeList.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		sizeList.setBounds(399,523, 245,40);;
+		sizeList.setBounds(399,523, 245,40);
 		sizeList.setVisibleRowCount(-1);
 		sizeList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		for(int i =0; i<sizes.size(); i++){
+			System.out.println(customer.returnUserShoeSize()+" "+ sizes.getElementAt(i));
+			if(sizes.getElementAt(i).equals(new Integer(customer.returnUserShoeSize()).toString())){
+				sizeList.setSelectedIndex(i);
+				break;
+			}
+		}
 		add(sizeList);
 
 		confirmButton = new JButton("confirm");
@@ -641,6 +660,7 @@ public class Panels extends JPanel implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				customer.editCustomer(nameField.getText(), passwordField.getText(), Integer.parseInt(sizes.getElementAt(sizeList.getSelectedIndex())), confirmPasswordField.getText(), new Payout(accountNoField.getText(), accountNameField.getText()), new Payment(cardField.getText(), cardNameField.getText(), Integer.parseInt(monthField.getText()),Integer.parseInt(yearField.getText()), cvvField.getText()), new Address(streetField.getText(), cityField.getText() , postalCodeField.getText(), countryField.getText()));
+				accountLabel.setText(customer.displayAccount());
 			}
 		};
 		confirmButton.addActionListener(actionListerConfirm);
@@ -661,6 +681,18 @@ public class Panels extends JPanel implements ActionListener{
 		deleteButton.setBackground(SystemColor.control);
 		deleteButton.setBounds(896, 543, 245, 69);
 		deleteButton.setVisible(false);
+		ActionListener actionListenerDelete = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(offerList.getSelectedIndex()!=-1) {
+					customer.deleteOffer(offerList.getSelectedIndex());
+					offerModel.remove(offerList.getSelectedIndex());
+					repaint();
+					revalidate();
+				}
+			}
+		};
+		deleteButton.addActionListener(actionListenerDelete);
 		add(deleteButton);
 
 		offerModel = new DefaultListModel<>();
@@ -832,6 +864,7 @@ public class Panels extends JPanel implements ActionListener{
 		shoes = new DefaultListModel<>();
 		if(catalogList.isEmpty()) {
 			admin.readOfferData();
+			admin.readOrderData();
 			catalog.readShoeList(admin.returnOfferMap());
 		}
 		for (int i = 0; i < catalogList.size(); i++) {
@@ -902,6 +935,18 @@ public class Panels extends JPanel implements ActionListener{
 		buyNowButton.setBorder(null);
 		buyNowButton.setFocusPainted(false);
 		buyNowButton.setVisible(false);
+		ActionListener actionListenerBuy = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				customer.createOrder("data",customer.userID,shoes.get(shoeList.getSelectedIndex()).returnSellOfferID(), new ShoeDetails(shoes.get(shoeList.getSelectedIndex()).returnShoeID(),
+						shoes.get(shoeList.getSelectedIndex()).returnShoeName(), shoes.get(shoeList.getSelectedIndex()).returnShoeSize(), shoes.get(shoeList.getSelectedIndex()).returnShoeBuyPrice(), admin.returnOrderMap().size() +1));
+				admin.removeOffer(shoes.get(shoeList.getSelectedIndex()).returnSellOfferID()+2);
+				catalog.setShoePrice(admin.returnOfferMap());
+				repaint();
+				revalidate();
+			}
+		};
+		buyNowButton.addActionListener(actionListenerBuy);
 		panel.add(buyNowButton);
 
 		quickSellButton = new JButton("quick sell");
@@ -913,6 +958,16 @@ public class Panels extends JPanel implements ActionListener{
 		quickSellButton.setBorder(null);
 		quickSellButton.setFocusPainted(false);
 		quickSellButton.setVisible(false);
+		ActionListener actionListenerSell = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeAll();
+				accountPanel();
+				repaint();
+				revalidate();
+			}
+		};
+		quickSellButton.addActionListener(actionListenerSell);
 		panel.add(quickSellButton);
 
 		bidButton = new JButton("place bid");
@@ -1299,17 +1354,6 @@ public class Panels extends JPanel implements ActionListener{
 		saveButton.setFocusPainted(false);
 		saveButton.setBackground(Color.WHITE);
 		saveButton.setBounds(637, 544, 265, 85);
-		ActionListener actionListenerSave = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				editor.editOrder(orderList.getSelectedIndex()+1, streetField.getText(), cityField.getText(), postalCodeField.getText(), countryField.getText());
-				removeAll();
-				editorMenu();
-				repaint();
-				revalidate();
-			}
-		};
-		saveButton.addActionListener(actionListenerSave);
 		add(saveButton);
 	}
 
@@ -1433,6 +1477,5 @@ public class Panels extends JPanel implements ActionListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 	}
 }

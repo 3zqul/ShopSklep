@@ -94,7 +94,7 @@ public class Catalog {
 
     public void setShoePrice(Map<Integer, Offer> offerMap){
 
-        for(int i=1; i<=offerMap.size(); i++){
+        for(int i=1; i<offerMap.size(); i++){
             switch (offerMap.get(i).returnOfferType()){
                 case "buy":
                     for(int j=1; j<shoeList.size(); j++) {

@@ -41,6 +41,14 @@ public class Shoe {
         return shoeID;
     }
 
+    public int returnSellOfferID(){
+        return sellOfferID;
+    }
+
+    public int returnBuyOfferID(){
+        return buyOfferID;
+    }
+
     public String returnShoeName(){
         return shoeName;
     }
